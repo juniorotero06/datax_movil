@@ -1,4 +1,5 @@
 import 'package:datax_movil/provider/login_form_provider.dart';
+import 'package:datax_movil/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ import 'package:datax_movil/ui/input_decoration.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const String rounterName = "login";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +121,8 @@ class _LoginForm extends StatelessWidget {
                           loginForm.isLoading =
                               false; //Validadr que el login sea correcto << backend
 
-                          Navigator.pushReplacementNamed(context, 'home');
+                          Navigator.pushReplacementNamed(
+                              context, HomeScreen.routerName);
                         })
             ],
           )),
