@@ -4,14 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:datax_movil/provider/theme_provider.dart';
 import 'package:datax_movil/shared_preferences/preferences.dart';
 import 'package:datax_movil/screens/screens.dart';
+import 'package:datax_movil/services/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Preferences.init();
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (_) => AuthServices()),
       ChangeNotifierProvider(
-          create: (_) => ThemeProvider(isDarkmode: Preferences.isDarkmode))
+          create: (_) => ThemeProvider(isDarkmode: Preferences.isDarkmode)),
     ],
     child: const MyApp(),
   ));
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
         initialRoute: LoginScreen.rounterName,
         routes: {
           LoginScreen.rounterName: (_) => LoginScreen(),
+          RegisterScreen.rounterName: (_) => RegisterScreen(),
           HomeScreen.routerName: (_) => const HomeScreen(),
           SettingsScreen.routerName: (_) => const SettingsScreen()
         },

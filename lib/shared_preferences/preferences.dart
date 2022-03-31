@@ -20,7 +20,6 @@ class Preferences {
     _pref.setString("name", name);
   }
 
-  /////////////////////////////////////////
   static bool get isDarkmode {
     return _pref.getBool("isDarkmode") ?? _isDarkmode;
   }
@@ -30,7 +29,6 @@ class Preferences {
     _pref.setBool("isDarkmode", value);
   }
 
-////////////////////////////////////////////
   static int get gender {
     return _pref.getInt("gender") ?? _gender;
   }

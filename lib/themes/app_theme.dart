@@ -4,4 +4,5 @@ class AppTheme {
   static const Color primary = Colors.deepPurple;
   static final ThemeData lightTheme =
       ThemeData.light().copyWith(scaffoldBackgroundColor: Colors.grey[300]);
+  static final ThemeData darkTheme = ThemeData.dark();
 }

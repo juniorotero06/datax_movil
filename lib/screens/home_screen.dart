@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:datax_movil/shared_preferences/preferences.dart';
 import 'package:datax_movil/widgets/widgets.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routerName = "home";
