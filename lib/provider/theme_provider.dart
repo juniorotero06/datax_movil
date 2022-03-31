@@ -6,7 +6,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData currentTheme;
 
   ThemeProvider({required bool isDarkmode})
-      : currentTheme = isDarkmode ? ThemeData.dark() : AppTheme.lightTheme;
+      : currentTheme = isDarkmode ? AppTheme.darkTheme : AppTheme.lightTheme;
 
   setLightMode() {
     currentTheme = AppTheme.lightTheme;
@@ -14,7 +14,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   setDarkMode() {
-    currentTheme = ThemeData.dark();
+    currentTheme = AppTheme.darkTheme;
     notifyListeners();
   }
 }

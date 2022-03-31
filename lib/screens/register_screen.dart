@@ -1,15 +1,15 @@
+import 'package:datax_movil/provider/register_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:datax_movil/services/services.dart';
-import 'package:datax_movil/provider/login_form_provider.dart';
+import 'package:datax_movil/provider/register_form_provider.dart';
 import 'package:datax_movil/screens/screens.dart';
 import 'package:datax_movil/themes/app_theme.dart';
 import 'package:datax_movil/ui/input_decoration.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
-class LoginScreen extends StatelessWidget {
-  static const String rounterName = "login";
+class RegisterScreen extends StatelessWidget {
+  static const String rounterName = "register";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,26 +25,25 @@ class LoginScreen extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                "Login",
+                "Registro",
                 style: Theme.of(context).textTheme.headline4,
               ),
               const SizedBox(height: 30),
 
               //GESTOR DE ESTADOS PARA UN SOLO PROVIDERL
               ChangeNotifierProvider(
-                create: (_) => LoginFormProvider(),
-                child: _LoginForm(),
+                create: (_) => RegisterFormProvider(),
+                child: _RegisterForm(),
               )
             ],
           )),
           const SizedBox(height: 50),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(
-                  context, RegisterScreen.rounterName);
+              Navigator.pushReplacementNamed(context, LoginScreen.rounterName);
             },
             child: const Text(
-              "Crear una nueva cuenta",
+              "¿Ya tienes cuenta?",
               style: TextStyle(fontSize: 20, color: Colors.black87),
             ),
             style: ButtonStyle(
@@ -59,17 +58,51 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class _LoginForm extends StatelessWidget {
+class _RegisterForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final registerForm = Provider.of<RegisterFormProvider>(context);
 
     return Container(
       child: Form(
-          key: loginForm.formKey,
+          key: registerForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
+              TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.name,
+                decoration: InputDecorations.authInputDecoration(
+                    hint: "", label: "Nombre", icon: Icons.person),
+                onChanged: (value) => registerForm.name = value,
+                validator: (value) {
+                  String pattern =
+                      r"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$";
+                  RegExp regExp = RegExp(pattern);
+
+                  return regExp.hasMatch(value ?? "")
+                      ? null
+                      : "El valor ingresado no es un correo";
+                },
+              ),
+              const SizedBox(height: 30),
+              TextFormField(
+                autocorrect: false,
+                keyboardType: TextInputType.name,
+                decoration: InputDecorations.authInputDecoration(
+                    hint: "", label: "Apellido", icon: Icons.person),
+                onChanged: (value) => registerForm.lastname = value,
+                validator: (value) {
+                  String pattern =
+                      r"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$";
+                  RegExp regExp = RegExp(pattern);
+
+                  return regExp.hasMatch(value ?? "")
+                      ? null
+                      : "El valor ingresado no es un correo";
+                },
+              ),
+              const SizedBox(height: 30),
               TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -77,7 +110,7 @@ class _LoginForm extends StatelessWidget {
                     hint: "example@email.com",
                     label: "Correo Electrónico",
                     icon: Icons.alternate_email_sharp),
-                onChanged: (value) => loginForm.email = value,
+                onChanged: (value) => registerForm.email = value,
                 validator: (value) {
                   String pattern =
                       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -97,13 +130,13 @@ class _LoginForm extends StatelessWidget {
                       hint: "*****",
                       label: "Contraseña",
                       icon: Icons.lock_outline),
-                  onChanged: (value) => loginForm.password = value,
+                  onChanged: (value) => registerForm.password = value,
                   validator: (value) {
                     return (value != null && value.length >= 6)
                         ? null
                         : "La contraseña debe de ser de 6 caracteres";
                   }),
-              const SizedBox(height: 30),
+              const SizedBox(height: 50),
               MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -114,27 +147,22 @@ class _LoginForm extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 80, vertical: 15),
                     child: Text(
-                      loginForm.isLoading ? "Espere..." : "Ingresar",
+                      registerForm.isLoading ? "Espere..." : "Crear Usuario",
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
-                  onPressed: loginForm.isLoading
+                  onPressed: registerForm.isLoading
                       ? null
                       : () async {
-                          final authServices =
-                              Provider.of<AuthServices>(context, listen: false);
-
                           FocusScope.of(context).unfocus();
 
-                          if (!loginForm.isValidForm()) return;
+                          if (!registerForm.isValidForm()) return;
 
-                          loginForm.isLoading = true;
+                          registerForm.isLoading = true;
 
-                          //await Future.delayed(const Duration(seconds: 2));
-                          final String? resp = await authServices.loginUser(
-                              loginForm.email, loginForm.password);
+                          await Future.delayed(const Duration(seconds: 2));
 
-                          loginForm.isLoading =
+                          registerForm.isLoading =
                               false; //Validadr que el login sea correcto << backend
 
                           Navigator.pushReplacementNamed(

@@ -1,7 +1,7 @@
-import 'package:datax_movil/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:datax_movil/provider/theme_provider.dart';
 import 'package:datax_movil/shared_preferences/preferences.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
@@ -20,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
