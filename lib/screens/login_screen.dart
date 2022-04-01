@@ -121,10 +121,9 @@ class _LoginForm extends StatelessWidget {
                   onPressed: loginForm.isLoading
                       ? null
                       : () async {
+                          FocusScope.of(context).unfocus();
                           final authServices =
                               Provider.of<AuthServices>(context, listen: false);
-
-                          FocusScope.of(context).unfocus();
 
                           if (!loginForm.isValidForm()) return;
 
@@ -134,11 +133,16 @@ class _LoginForm extends StatelessWidget {
                           final String? resp = await authServices.loginUser(
                               loginForm.email, loginForm.password);
 
-                          loginForm.isLoading =
-                              false; //Validadr que el login sea correcto << backend
+                          if (resp == null) {
+                            Navigator.pushReplacementNamed(
+                                context, HomeScreen.routerName);
+                          } else {
+                            print(resp);
+                            NotificationsService.showSnackBar(resp);
+                            loginForm.isLoading =
+                                false; //Validadr que el login sea correcto << backend
 
-                          Navigator.pushReplacementNamed(
-                              context, HomeScreen.routerName);
+                          }
                         })
             ],
           )),
