@@ -27,12 +27,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'DataX',
         debugShowCheckedModeBanner: false,
-        initialRoute: LoginScreen.rounterName,
+        scaffoldMessengerKey: NotificationsService.messengerKey,
+        initialRoute: CheckAuthScreen.rounterName,
         routes: {
           LoginScreen.rounterName: (_) => LoginScreen(),
           RegisterScreen.rounterName: (_) => RegisterScreen(),
           HomeScreen.routerName: (_) => const HomeScreen(),
-          SettingsScreen.routerName: (_) => const SettingsScreen()
+          SettingsScreen.routerName: (_) => const SettingsScreen(),
+          CheckAuthScreen.rounterName: (_) => const CheckAuthScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }
