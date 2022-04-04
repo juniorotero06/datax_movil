@@ -1,4 +1,4 @@
-import 'package:datax_movil/provider/register_form_provider.dart';
+import 'package:datax_movil/provider/license_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +58,13 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-class _RegisterForm extends StatelessWidget {
+class _RegisterForm extends StatefulWidget {
+  @override
+  State<_RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<_RegisterForm> {
+  bool _isRegisterLicense = false;
   @override
   Widget build(BuildContext context) {
     final registerForm = Provider.of<RegisterFormProvider>(context);
@@ -136,6 +142,18 @@ class _RegisterForm extends StatelessWidget {
                         ? null
                         : "La contraseña debe de ser de 6 caracteres";
                   }),
+              const SizedBox(height: 30),
+              CheckboxListTile(
+                  activeColor: AppTheme.primary,
+                  title: const Text("¿No tiene su licensia registrada aun?"),
+                  value: _isRegisterLicense,
+                  onChanged: (value) {
+                    _isRegisterLicense = value ?? true;
+                    setState(() {});
+                  }),
+              if (_isRegisterLicense)
+                ChangeNotifierProvider(
+                    child: LicenseForm(), create: (_) => LicenseFormProvider()),
               const SizedBox(height: 50),
               MaterialButton(
                   shape: RoundedRectangleBorder(
@@ -166,8 +184,9 @@ class _RegisterForm extends StatelessWidget {
                               false; //Validadr que el login sea correcto << backend
 
                           Navigator.pushReplacementNamed(
-                              context, HomeScreen.routerName);
-                        })
+                              context, LoginScreen.rounterName);
+                        }),
+              const SizedBox(height: 30),
             ],
           )),
     );
