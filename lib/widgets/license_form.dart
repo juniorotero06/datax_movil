@@ -29,7 +29,7 @@ class LicenseForm extends StatelessWidget {
 
               return regExp.hasMatch(value ?? "")
                   ? null
-                  : "El valor ingresado no es permitifo";
+                  : "El valor ingresado no es permitido";
             },
           ),
           const SizedBox(height: 30),
@@ -46,7 +46,7 @@ class LicenseForm extends StatelessWidget {
 
               return regExp.hasMatch(value ?? "")
                   ? null
-                  : "El valor ingresado no es permitifo";
+                  : "El valor ingresado no es permitido";
             },
           ),
           const SizedBox(height: 30),
@@ -82,7 +82,7 @@ class LicenseForm extends StatelessWidget {
 
               return regExp.hasMatch(value ?? "")
                   ? null
-                  : "El valor ingresado no es permitifo";
+                  : "El valor ingresado no es permitido";
             },
           ),
           const SizedBox(height: 30),
@@ -99,7 +99,7 @@ class LicenseForm extends StatelessWidget {
 
               return regExp.hasMatch(value ?? "")
                   ? null
-                  : "El valor ingresado no es permitifo";
+                  : "El valor ingresado no es permitido";
             },
           ),
           const SizedBox(height: 30),
@@ -118,7 +118,7 @@ class LicenseForm extends StatelessWidget {
 
               return regExp.hasMatch(value ?? "")
                   ? null
-                  : "El valor ingresado no es permitifo";
+                  : "El valor ingresado no es permitido";
             },
           ),
           const SizedBox(height: 30),
@@ -137,7 +137,7 @@ class LicenseForm extends StatelessWidget {
 
               return regExp.hasMatch(value ?? "")
                   ? null
-                  : "El valor ingresado no es permitifo";
+                  : "El valor ingresado no es permitido";
             },
           ),
           const SizedBox(height: 30),
