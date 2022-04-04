@@ -155,38 +155,39 @@ class _RegisterFormState extends State<_RegisterForm> {
                 ChangeNotifierProvider(
                     child: LicenseForm(), create: (_) => LicenseFormProvider()),
               const SizedBox(height: 50),
-              MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  disabledColor: Colors.grey,
-                  elevation: 0,
-                  color: AppTheme.primary,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 80, vertical: 15),
-                    child: Text(
-                      registerForm.isLoading ? "Espere..." : "Crear Usuario",
-                      style: const TextStyle(color: Colors.white),
+              if (!_isRegisterLicense)
+                MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    disabledColor: Colors.grey,
+                    elevation: 0,
+                    color: AppTheme.primary,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 15),
+                      child: Text(
+                        registerForm.isLoading ? "Espere..." : "Crear Usuario",
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
-                  onPressed: registerForm.isLoading
-                      ? null
-                      : () async {
-                          FocusScope.of(context).unfocus();
+                    onPressed: registerForm.isLoading
+                        ? null
+                        : () async {
+                            FocusScope.of(context).unfocus();
 
-                          if (!registerForm.isValidForm()) return;
+                            if (!registerForm.isValidForm()) return;
 
-                          registerForm.isLoading = true;
+                            registerForm.isLoading = true;
 
-                          await Future.delayed(const Duration(seconds: 2));
+                            await Future.delayed(const Duration(seconds: 2));
 
-                          registerForm.isLoading =
-                              false; //Validadr que el login sea correcto << backend
+                            registerForm.isLoading =
+                                false; //Validadr que el login sea correcto << backend
 
-                          Navigator.pushReplacementNamed(
-                              context, LoginScreen.rounterName);
-                        }),
-              const SizedBox(height: 30),
+                            Navigator.pushReplacementNamed(
+                                context, LoginScreen.rounterName);
+                          }),
+              if (!_isRegisterLicense) const SizedBox(height: 30),
             ],
           )),
     );
