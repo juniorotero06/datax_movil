@@ -153,7 +153,7 @@ class LicenseForm extends StatelessWidget {
               validator: (value) {
                 return (value != null && value.length >= 6)
                     ? null
-                    : "La contraseña debe de ser de 6 caracteres";
+                    : "La contraseña debe de ser de minimo 6 caracteres";
               }),
           const SizedBox(height: 50),
           MaterialButton(
