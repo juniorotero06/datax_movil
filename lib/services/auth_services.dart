@@ -39,4 +39,66 @@ class AuthServices extends ChangeNotifier {
   Future<String> readToken() async {
     return await storage.read(key: 'auth-token') ?? "";
   }
+
+  Future<String?> registerData(
+      String name, String lastname, String email, String password) async {
+    final Map<String, dynamic> registerInfo = {
+      "name": name,
+      "lastname": lastname,
+      "email": email,
+      "password": password
+    };
+
+    final url = Uri.http(_baseUrl, "/api/auth/regiter_data");
+
+    final resp = await http.post(url, body: registerInfo);
+    final Map<String, dynamic> decodeResp = json.decode(resp.body);
+
+    if (decodeResp.containsKey("data")) {
+      return null;
+    } else {
+      return decodeResp["error"];
+    }
+  }
+
+  Future<String?> licenseData(
+      String companyName,
+      String address,
+      String email,
+      String phone,
+      String host,
+      String bdUser,
+      String bdName,
+      String bdPass,
+      String registerName,
+      String registerLastname,
+      String registerEmail,
+      String registerPassword) async {
+    final Map<String, dynamic> licenseInfo = {
+      "companyName": companyName,
+      "address": address,
+      "email": email,
+      "phone": phone,
+      "host": host,
+      "bdUser": bdUser,
+      "bdName": bdName,
+      "bdPass": bdPass,
+      "registerName": registerName,
+      "registerLastname": registerLastname,
+      "registerEmail": registerEmail,
+      "registerPassword": registerPassword
+    };
+
+    final url = Uri.http(_baseUrl, "/api/auth/license_data");
+
+    final resp = await http.post(url, body: licenseInfo);
+
+    final Map<String, dynamic> decodeResp = json.decode(resp.body);
+
+    if (decodeResp.containsKey("data")) {
+      return null;
+    } else {
+      return decodeResp["error"];
+    }
+  }
 }
