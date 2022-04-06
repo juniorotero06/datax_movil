@@ -1,16 +1,32 @@
+import 'dart:io';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:datax_movil/provider/license_form_provider.dart';
-
-import '../screens/screens.dart';
+import '../provider/register_form_provider.dart';
+import '../services/services.dart';
 import '../themes/app_theme.dart';
 import '../ui/input_decoration.dart';
+import 'alerts.dart';
 
 class LicenseForm extends StatelessWidget {
+  final String registerName;
+  final String registerLastname;
+  final String registerEmail;
+  final String registerPassword;
+
+  const LicenseForm(
+      {Key? key,
+      required this.registerName,
+      required this.registerLastname,
+      required this.registerEmail,
+      required this.registerPassword})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final licenseForm = Provider.of<LicenseFormProvider>(context);
+    final registerForm = Provider.of<RegisterFormProvider>(context);
     return Form(
       key: licenseForm.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -34,21 +50,18 @@ class LicenseForm extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           TextFormField(
-            autocorrect: false,
-            keyboardType: TextInputType.name,
-            decoration: InputDecorations.authInputDecoration(
-                hint: "", label: "Dirección", icon: Icons.location_on_outlined),
-            onChanged: (value) => licenseForm.address = value,
-            validator: (value) {
-              String pattern =
-                  r"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$";
-              RegExp regExp = RegExp(pattern);
-
-              return regExp.hasMatch(value ?? "")
-                  ? null
-                  : "El valor ingresado no es permitido";
-            },
-          ),
+              autocorrect: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecorations.authInputDecoration(
+                  hint: "",
+                  label: "Dirección",
+                  icon: Icons.location_on_outlined),
+              onChanged: (value) => licenseForm.address = value,
+              validator: (value) {
+                return (value != null && value.length >= 3)
+                    ? null
+                    : "El valor ingresado no es permitido";
+              }),
           const SizedBox(height: 30),
           TextFormField(
             autocorrect: false,
@@ -71,16 +84,12 @@ class LicenseForm extends StatelessWidget {
           const SizedBox(height: 30),
           TextFormField(
             autocorrect: false,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.phone,
             decoration: InputDecorations.authInputDecoration(
                 hint: "", label: "Telefóno", icon: Icons.phone),
             onChanged: (value) => licenseForm.phone = value,
             validator: (value) {
-              String pattern =
-                  r"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$";
-              RegExp regExp = RegExp(pattern);
-
-              return regExp.hasMatch(value ?? "")
+              return (value != null && value.length >= 3)
                   ? null
                   : "El valor ingresado no es permitido";
             },
@@ -174,18 +183,44 @@ class LicenseForm extends StatelessWidget {
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus();
+                      final authServices =
+                          Provider.of<AuthServices>(context, listen: false);
 
-                      if (!licenseForm.isValidForm()) return;
+                      if (!registerForm.isValidForm()) {
+                        if (!licenseForm.isValidForm()) return;
+                      }
 
                       licenseForm.isLoading = true;
 
-                      await Future.delayed(const Duration(seconds: 2));
+                      final String? resp = await authServices.licenseData(
+                          licenseForm.companyName,
+                          licenseForm.address,
+                          licenseForm.email,
+                          licenseForm.phone,
+                          licenseForm.host,
+                          licenseForm.bdUser,
+                          licenseForm.bdName,
+                          licenseForm.bdPass,
+                          registerName,
+                          registerLastname,
+                          registerEmail,
+                          registerPassword);
 
-                      licenseForm.isLoading =
-                          false; //Validadr que el login sea correcto << backend
-
-                      Navigator.pushReplacementNamed(
-                          context, LoginScreen.rounterName);
+                      if (resp == null) {
+                        licenseForm.isLoading = false;
+                        return Platform.isAndroid
+                            ? displayDialogAndroid(context, "¡Enviado!",
+                                "Se ha enviado la información satisfactoriamente")
+                            : displayDialogIOS(context, "¡Enviado!",
+                                "Se ha enviado la información satisfactoriamente");
+                      } else {
+                        licenseForm.isLoading = false;
+                        return Platform.isAndroid
+                            ? displayDialogAndroid(context, "Error",
+                                "Ha ocurrido un error en el envio de la información")
+                            : displayDialogIOS(context, "Error",
+                                "Ha ocurrido un error en el envio de la información");
+                      }
                     }),
           const SizedBox(height: 30),
         ],

@@ -1,12 +1,15 @@
-import 'package:datax_movil/provider/license_form_provider.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:datax_movil/services/services.dart';
+import 'package:datax_movil/provider/license_form_provider.dart';
 import 'package:datax_movil/provider/register_form_provider.dart';
 import 'package:datax_movil/screens/screens.dart';
 import 'package:datax_movil/themes/app_theme.dart';
 import 'package:datax_movil/ui/input_decoration.dart';
 import 'package:datax_movil/widgets/widgets.dart';
+import '../widgets/alerts.dart';
 
 class RegisterScreen extends StatelessWidget {
   static const String rounterName = "register";
@@ -153,7 +156,12 @@ class _RegisterFormState extends State<_RegisterForm> {
                   }),
               if (_isRegisterLicense)
                 ChangeNotifierProvider(
-                    child: LicenseForm(), create: (_) => LicenseFormProvider()),
+                    child: LicenseForm(
+                        registerName: registerForm.name,
+                        registerLastname: registerForm.lastname,
+                        registerEmail: registerForm.email,
+                        registerPassword: registerForm.password),
+                    create: (_) => LicenseFormProvider()),
               const SizedBox(height: 50),
               if (!_isRegisterLicense)
                 MaterialButton(
@@ -174,18 +182,36 @@ class _RegisterFormState extends State<_RegisterForm> {
                         ? null
                         : () async {
                             FocusScope.of(context).unfocus();
+                            final authServices = Provider.of<AuthServices>(
+                                context,
+                                listen: false);
 
                             if (!registerForm.isValidForm()) return;
 
-                            registerForm.isLoading = true;
+                            //registerForm.isLoading = true;
 
-                            await Future.delayed(const Duration(seconds: 2));
+                            final String? resp =
+                                await authServices.registerData(
+                                    registerForm.name,
+                                    registerForm.lastname,
+                                    registerForm.email,
+                                    registerForm.password);
 
-                            registerForm.isLoading =
-                                false; //Validadr que el login sea correcto << backend
-
-                            Navigator.pushReplacementNamed(
-                                context, LoginScreen.rounterName);
+                            if (resp == null) {
+                              //registerForm.isLoading = false;
+                              return Platform.isAndroid
+                                  ? displayDialogAndroid(context, "¡Enviado!",
+                                      "Se ha enviado la información satisfactoriamente")
+                                  : displayDialogIOS(context, "¡Enviado!",
+                                      "Se ha enviado la información satisfactoriamente");
+                            } else {
+                              //registerForm.isLoading = false;
+                              return Platform.isAndroid
+                                  ? displayDialogAndroid(context, "Error",
+                                      "Ha ocurrido un error en el envio de la información")
+                                  : displayDialogIOS(context, "Error",
+                                      "Ha ocurrido un error en el envio de la información");
+                            }
                           }),
               if (!_isRegisterLicense) const SizedBox(height: 30),
             ],
