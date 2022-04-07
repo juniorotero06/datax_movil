@@ -15,13 +15,17 @@ class LicenseForm extends StatelessWidget {
   final String registerLastname;
   final String registerEmail;
   final String registerPassword;
+  final String registerPhone;
+  final String rol;
 
   const LicenseForm(
       {Key? key,
       required this.registerName,
       required this.registerLastname,
       required this.registerEmail,
-      required this.registerPassword})
+      required this.registerPassword,
+      required this.registerPhone,
+      required this.rol})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -44,6 +48,21 @@ class LicenseForm extends StatelessWidget {
               RegExp regExp = RegExp(pattern);
 
               return regExp.hasMatch(value ?? "")
+                  ? null
+                  : "El valor ingresado no es permitido";
+            },
+          ),
+          const SizedBox(height: 30),
+          TextFormField(
+            autocorrect: false,
+            keyboardType: TextInputType.number,
+            decoration: InputDecorations.authInputDecoration(
+                hint: "",
+                label: "Código de la licencia",
+                icon: Icons.document_scanner_outlined),
+            onChanged: (value) => licenseForm.licenseId = value,
+            validator: (value) {
+              return (value != null && value.length == 10)
                   ? null
                   : "El valor ingresado no es permitido";
             },
@@ -86,7 +105,7 @@ class LicenseForm extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.phone,
             decoration: InputDecorations.authInputDecoration(
-                hint: "", label: "Telefóno", icon: Icons.phone),
+                hint: "", label: "Telefóno de la compañía", icon: Icons.phone),
             onChanged: (value) => licenseForm.phone = value,
             validator: (value) {
               return (value != null && value.length >= 3)
@@ -194,6 +213,7 @@ class LicenseForm extends StatelessWidget {
 
                       final String? resp = await authServices.licenseData(
                           licenseForm.companyName,
+                          licenseForm.licenseId,
                           licenseForm.address,
                           licenseForm.email,
                           licenseForm.phone,
@@ -203,8 +223,10 @@ class LicenseForm extends StatelessWidget {
                           licenseForm.bdPass,
                           registerName,
                           registerLastname,
+                          registerPhone,
                           registerEmail,
-                          registerPassword);
+                          registerPassword,
+                          rol);
 
                       if (resp == null) {
                         licenseForm.isLoading = false;

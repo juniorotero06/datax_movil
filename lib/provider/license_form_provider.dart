@@ -4,6 +4,7 @@ class LicenseFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String companyName = "";
+  String licenseId = "";
   String address = "";
   String email = "";
   String phone = "";
