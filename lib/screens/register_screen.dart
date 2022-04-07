@@ -114,6 +114,19 @@ class _RegisterFormState extends State<_RegisterForm> {
               const SizedBox(height: 30),
               TextFormField(
                 autocorrect: false,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecorations.authInputDecoration(
+                    hint: "", label: "Telefóno", icon: Icons.phone),
+                onChanged: (value) => registerForm.phone = value,
+                validator: (value) {
+                  return (value != null && value.length == 10)
+                      ? null
+                      : "El valor ingresado no es permitido";
+                },
+              ),
+              const SizedBox(height: 30),
+              TextFormField(
+                autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecorations.authInputDecoration(
                     hint: "example@email.com",
@@ -145,10 +158,43 @@ class _RegisterFormState extends State<_RegisterForm> {
                         ? null
                         : "La contraseña debe de ser de 6 caracteres";
                   }),
+              if (!_isRegisterLicense) const SizedBox(height: 30),
+              if (!_isRegisterLicense)
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecorations.authInputDecoration(
+                      hint: "",
+                      label: "Código de la licencia",
+                      icon: Icons.document_scanner_outlined),
+                  onChanged: (value) => registerForm.licenseId = value,
+                  validator: (value) {
+                    return (value != null && value.length == 10)
+                        ? null
+                        : "El valor ingresado no es permitido";
+                  },
+                ),
+              const SizedBox(height: 30),
+              DropdownButtonFormField<String>(
+                value: "Usuario",
+                items: const [
+                  DropdownMenuItem(value: "Usuario", child: Text("Usuario")),
+                  DropdownMenuItem(value: "Contador", child: Text("Contador")),
+                  DropdownMenuItem(
+                      value: "Administrador", child: Text("Administrador")),
+                ],
+                onChanged: (value) {
+                  registerForm.rol = value ?? "Usuario";
+                },
+                decoration: InputDecorations.authInputDecoration(
+                    hint: "",
+                    label: "Rol",
+                    icon: Icons.admin_panel_settings_outlined),
+              ),
               const SizedBox(height: 30),
               CheckboxListTile(
                   activeColor: AppTheme.primary,
-                  title: const Text("¿No tiene su licensia registrada aun?"),
+                  title: const Text("¿No tiene su licencia registrada aun?"),
                   value: _isRegisterLicense,
                   onChanged: (value) {
                     _isRegisterLicense = value ?? true;
@@ -159,8 +205,10 @@ class _RegisterFormState extends State<_RegisterForm> {
                     child: LicenseForm(
                         registerName: registerForm.name,
                         registerLastname: registerForm.lastname,
+                        registerPhone: registerForm.phone,
                         registerEmail: registerForm.email,
-                        registerPassword: registerForm.password),
+                        registerPassword: registerForm.password,
+                        rol: registerForm.rol),
                     create: (_) => LicenseFormProvider()),
               const SizedBox(height: 50),
               if (!_isRegisterLicense)
@@ -194,8 +242,11 @@ class _RegisterFormState extends State<_RegisterForm> {
                                 await authServices.registerData(
                                     registerForm.name,
                                     registerForm.lastname,
+                                    registerForm.phone,
                                     registerForm.email,
-                                    registerForm.password);
+                                    registerForm.password,
+                                    registerForm.licenseId,
+                                    registerForm.rol);
 
                             if (resp == null) {
                               //registerForm.isLoading = false;

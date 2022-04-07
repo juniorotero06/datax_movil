@@ -40,13 +40,16 @@ class AuthServices extends ChangeNotifier {
     return await storage.read(key: 'auth-token') ?? "";
   }
 
-  Future<String?> registerData(
-      String name, String lastname, String email, String password) async {
+  Future<String?> registerData(String name, String lastname, String phone,
+      String email, String password, String? licenseId, String rol) async {
     final Map<String, dynamic> registerInfo = {
       "name": name,
       "lastname": lastname,
+      "phone": phone,
       "email": email,
-      "password": password
+      "password": password,
+      "licenseId": licenseId,
+      "rol": rol
     };
 
     final url = Uri.http(_baseUrl, "/api/auth/regiter_data");
@@ -63,6 +66,7 @@ class AuthServices extends ChangeNotifier {
 
   Future<String?> licenseData(
       String companyName,
+      String licenseId,
       String address,
       String email,
       String phone,
@@ -72,10 +76,13 @@ class AuthServices extends ChangeNotifier {
       String bdPass,
       String registerName,
       String registerLastname,
+      String registerPhone,
       String registerEmail,
-      String registerPassword) async {
+      String registerPassword,
+      String rol) async {
     final Map<String, dynamic> licenseInfo = {
       "companyName": companyName,
+      "licenseId": licenseId,
       "address": address,
       "email": email,
       "phone": phone,
@@ -85,8 +92,10 @@ class AuthServices extends ChangeNotifier {
       "bdPass": bdPass,
       "registerName": registerName,
       "registerLastname": registerLastname,
+      "registerPhone": registerPhone,
       "registerEmail": registerEmail,
-      "registerPassword": registerPassword
+      "registerPassword": registerPassword,
+      "rol": rol
     };
 
     final url = Uri.http(_baseUrl, "/api/auth/license_data");
