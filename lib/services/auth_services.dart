@@ -25,6 +25,14 @@ class AuthServices extends ChangeNotifier {
     if (decodeResp.containsKey("data")) {
       await storage.write(
           key: 'auth-token', value: decodeResp["data"]["token"]);
+      await storage.write(
+          key: "fullName",
+          value: '${decodeResp["name"]} ${decodeResp["lastname"]}');
+      await storage.write(key: "rolId", value: decodeResp["rolId"].toString());
+      await storage.write(key: "rolName", value: decodeResp["rolName"]);
+      await storage.write(
+          key: "licenseId", value: decodeResp["licenseId"].toString());
+      await storage.write(key: "codLicense", value: decodeResp["codLicense"]);
       return null;
     } else {
       return decodeResp["error"];
@@ -33,11 +41,16 @@ class AuthServices extends ChangeNotifier {
 
   Future logout() async {
     await storage.delete(key: 'auth-token');
+    await storage.delete(key: 'fullName');
+    await storage.delete(key: 'rolId');
+    await storage.delete(key: 'rolName');
+    await storage.delete(key: 'licenseId');
+    await storage.delete(key: 'codLicense');
     return;
   }
 
-  Future<String> readToken() async {
-    return await storage.read(key: 'auth-token') ?? "";
+  Future<String> readToken(key) async {
+    return await storage.read(key: key) ?? "";
   }
 
   Future<String?> registerData(String name, String lastname, String phone,
@@ -65,21 +78,22 @@ class AuthServices extends ChangeNotifier {
   }
 
   Future<String?> licenseData(
-      String companyName,
-      String licenseId,
-      String address,
-      String email,
-      String phone,
-      String host,
-      String bdUser,
-      String bdName,
-      String bdPass,
-      String registerName,
-      String registerLastname,
-      String registerPhone,
-      String registerEmail,
-      String registerPassword,
-      String rol) async {
+    String companyName,
+    String licenseId,
+    String address,
+    String email,
+    String phone,
+    String host,
+    String bdUser,
+    String bdName,
+    String bdPass,
+    String registerName,
+    String registerLastname,
+    String registerPhone,
+    String registerEmail,
+    String registerPassword,
+    String rol,
+  ) async {
     final Map<String, dynamic> licenseInfo = {
       "companyName": companyName,
       "licenseId": licenseId,
@@ -102,6 +116,40 @@ class AuthServices extends ChangeNotifier {
 
     final resp = await http.post(url, body: licenseInfo);
 
+    final Map<String, dynamic> decodeResp = json.decode(resp.body);
+
+    if (decodeResp.containsKey("data")) {
+      return null;
+    } else {
+      return decodeResp["error"];
+    }
+  }
+
+  Future<String?> adminRegisterToUser(
+      String name,
+      String lastname,
+      String phone,
+      String email,
+      String password,
+      String licenseId,
+      String rol,
+      String token) async {
+    final Map<String, dynamic> registerInfo = {
+      "name": name,
+      "lastname": lastname,
+      "phone": phone,
+      "email": email,
+      "password": password,
+      "licenseId": licenseId,
+      "rol": rol
+    };
+
+    final url = Uri.http(_baseUrl, "/api/admin_regiter_user");
+
+    final resp = await http.post(url, body: registerInfo, headers: {
+      "Content-Type": "application/json",
+      "auth-token": token,
+    });
     final Map<String, dynamic> decodeResp = json.decode(resp.body);
 
     if (decodeResp.containsKey("data")) {

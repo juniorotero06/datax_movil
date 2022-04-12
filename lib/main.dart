@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
           RegisterScreen.rounterName: (_) => RegisterScreen(),
           HomeScreen.routerName: (_) => const HomeScreen(),
           SettingsScreen.routerName: (_) => const SettingsScreen(),
-          CheckAuthScreen.rounterName: (_) => const CheckAuthScreen()
+          CheckAuthScreen.rounterName: (_) => const CheckAuthScreen(),
+          AddUserScreen.rounterName: (_) => AddUserScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }

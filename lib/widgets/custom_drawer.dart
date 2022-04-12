@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:datax_movil/screens/screens.dart';
+import '../services/services.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final authServices = Provider.of<AuthServices>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -23,6 +26,22 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacementNamed(
                   context, SettingsScreen.routerName);
+            },
+          ),
+          FutureBuilder(
+            future: authServices.readToken("rolName"),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.data == "administrative") {
+                return ListTile(
+                  leading: const Icon(Icons.person_add),
+                  title: const Text("Crear Usuario"),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                        context, AddUserScreen.rounterName);
+                  },
+                );
+              }
+              return Container();
             },
           )
         ],

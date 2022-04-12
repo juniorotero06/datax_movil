@@ -1,4 +1,6 @@
+import 'package:datax_movil/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/provider/theme_provider.dart';
@@ -21,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
+    final authServices = Provider.of<AuthServices>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text("Settings")),
@@ -70,17 +72,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }),
             const Divider(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextFormField(
-                initialValue: Preferences.name,
-                decoration:
-                    const InputDecoration(labelText: "Nombre del usuario"),
-                onChanged: (value) {
-                  Preferences.name = value;
-                  setState(() {});
-                },
-              ),
-            )
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: FutureBuilder(
+                    future: authServices.readToken("fullName"),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Text("Sin datos...");
+                      }
+                      return Text("Nombre del usuario: " + snapshot.data!);
+                    })),
+            const Divider(),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: FutureBuilder(
+                    future: authServices.readToken("rolName"),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Text("Sin datos...");
+                      }
+                      return Text("rol: " + snapshot.data!);
+                    })),
+            const Divider(),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: FutureBuilder(
+                    future: authServices.readToken("rolId"),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Text("Sin datos...");
+                      }
+                      return Text("id del rol: " + snapshot.data!);
+                    })),
           ],
         )),
       ),

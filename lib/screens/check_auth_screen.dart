@@ -16,7 +16,7 @@ class CheckAuthScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: authService.readToken(),
+            future: authService.readToken("auth-token"),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (!snapshot.hasData) {
                 return const Text("Validando...");

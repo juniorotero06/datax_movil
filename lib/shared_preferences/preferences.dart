@@ -4,6 +4,7 @@ class Preferences {
   static late SharedPreferences _pref;
 
   static String _name = "";
+  static String _lastname = "";
   static bool _isDarkmode = false;
   static int _gender = 1;
 
@@ -18,6 +19,15 @@ class Preferences {
   static set name(String name) {
     _name = name;
     _pref.setString("name", name);
+  }
+
+  static String get lastname {
+    return _pref.getString("lastname") ?? _lastname;
+  }
+
+  static set lastname(String lastname) {
+    _lastname = lastname;
+    _pref.setString("lastname", lastname);
   }
 
   static bool get isDarkmode {
