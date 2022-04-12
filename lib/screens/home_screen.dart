@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/screens/screens.dart';
@@ -10,6 +11,8 @@ class HomeScreen extends StatelessWidget {
   static const String routerName = "home";
 
   const HomeScreen({Key? key}) : super(key: key);
+
+  final storage = const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,8 @@ class HomeScreen extends StatelessWidget {
             Text("Genero: ${Preferences.gender}"),
             const Divider(),
             Text("Nombre de usuario: ${Preferences.name}"),
+            const Divider(),
+            Text("Apellido de usuario: ${storage.read(key: "fullName")}"),
             const Divider(),
           ],
         ));
