@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../services/services.dart';
-
-class AddUserFormProvider extends ChangeNotifier {
+class ChangePasswordProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  String name = "";
-  String lastname = "";
   String email = "";
   String password = "";
-  String phone = "";
-  String licenseId = "";
-  String rol = "User";
+  String newPassword = "";
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

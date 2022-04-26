@@ -28,6 +28,7 @@ class AuthServices extends ChangeNotifier {
       await storage.write(
           key: "fullName",
           value: '${decodeResp["name"]} ${decodeResp["lastname"]}');
+      await storage.write(key: "email", value: decodeResp["email"]);
       await storage.write(key: "rolId", value: decodeResp["rolId"].toString());
       await storage.write(key: "rolName", value: decodeResp["rolName"]);
       await storage.write(
@@ -42,6 +43,7 @@ class AuthServices extends ChangeNotifier {
   Future logout() async {
     await storage.delete(key: 'auth-token');
     await storage.delete(key: 'fullName');
+    await storage.delete(key: 'email');
     await storage.delete(key: 'rolId');
     await storage.delete(key: 'rolName');
     await storage.delete(key: 'licenseId');
@@ -147,6 +149,28 @@ class AuthServices extends ChangeNotifier {
     final url = Uri.http(_baseUrl, "/api/admin_regiter_user");
 
     final resp = await http.post(url, body: registerInfo, headers: {
+      "auth-token": token,
+    });
+    final Map<String, dynamic> decodeResp = json.decode(resp.body);
+
+    if (decodeResp.containsKey("data")) {
+      return null;
+    } else {
+      return decodeResp["error"];
+    }
+  }
+
+  Future<String?> changePasswordAdmin(
+      String email, String password, String newPassword, String token) async {
+    final Map<String, dynamic> changePassInfo = {
+      "email": email,
+      "password": password,
+      "newPassword": newPassword,
+    };
+
+    final url = Uri.http(_baseUrl, "/api/admin/change_pass");
+
+    final resp = await http.post(url, body: changePassInfo, headers: {
       "Content-Type": "application/json",
       "auth-token": token,
     });

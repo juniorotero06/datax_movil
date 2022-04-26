@@ -43,7 +43,39 @@ class CustomDrawer extends StatelessWidget {
               }
               return Container();
             },
-          )
+          ),
+          FutureBuilder(
+            future: authServices.readToken("rolName"),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.data == "administrative") {
+                return ListTile(
+                  leading: const Icon(Icons.password),
+                  title: const Text("Cambiar Contraseña Administrador"),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                        context, ChangePasswordAdminScreen.rounterName);
+                  },
+                );
+              }
+              return Container();
+            },
+          ),
+          FutureBuilder(
+            future: authServices.readToken("rolName"),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.data == "administrative") {
+                return ListTile(
+                  leading: const Icon(Icons.person_add),
+                  title: const Text("Cambiar Roles a Usuarios"),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                        context, AddUserScreen.rounterName);
+                  },
+                );
+              }
+              return Container();
+            },
+          ),
         ],
       ),
     );
