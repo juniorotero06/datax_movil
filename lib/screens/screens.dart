@@ -6,3 +6,4 @@ export 'package:datax_movil/screens/check_auth_screen.dart';
 export 'package:datax_movil/screens/add_user_screen.dart';
 export 'package:datax_movil/screens/change_password_admin.dart';
 export 'package:datax_movil/widgets/change_role_user.dart';
+export 'package:datax_movil/screens/check_balance_screen.dart';

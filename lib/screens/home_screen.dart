@@ -7,6 +7,8 @@ import 'package:datax_movil/services/services.dart';
 import 'package:datax_movil/shared_preferences/preferences.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
+import '../themes/app_theme.dart';
+
 class HomeScreen extends StatelessWidget {
   static const String routerName = "home";
 
@@ -31,18 +33,49 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         drawer: CustomDrawer(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("isDarkMode: ${Preferences.isDarkmode} "),
-            const Divider(),
-            Text("Genero: ${Preferences.gender}"),
-            const Divider(),
-            Text("Nombre de usuario: ${Preferences.name}"),
-            const Divider(),
-            Text("Apellido de usuario: ${storage.read(key: "fullName")}"),
-            const Divider(),
-          ],
-        ));
+        body: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      disabledColor: Colors.grey,
+                      elevation: 0,
+                      color: AppTheme.primary,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.attach_money,
+                              color: Colors.white, size: 30),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 20),
+                            child: const Text(
+                              "Consultar Saldo",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, CheckBalanceScreen.routerName);
+                      }),
+                  const Divider(),
+                  Text("isDarkMode: ${Preferences.isDarkmode} "),
+                  const Divider(),
+                  Text("Genero: ${Preferences.gender}"),
+                  const Divider(),
+                  Text("Nombre de usuario: ${Preferences.name}"),
+                  const Divider(),
+                  Text("Apellido de usuario: ${storage.read(key: "fullName")}"),
+                  const Divider(),
+                ],
+              ),
+            ]));
   }
 }

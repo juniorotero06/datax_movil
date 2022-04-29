@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
           ChangePasswordAdminScreen.rounterName: (_) =>
               const ChangePasswordAdminScreen(),
           ChangeRoleToUserScreen.rounterName: (_) =>
-              const ChangeRoleToUserScreen()
+              const ChangeRoleToUserScreen(),
+          CheckBalanceScreen.routerName: (_) => CheckBalanceScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }

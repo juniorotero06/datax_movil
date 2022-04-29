@@ -163,8 +163,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
                             : () async {
                                 FocusScope.of(context).unfocus();
                                 if (!changePasswordForm.isValidForm()) return;
-                                print(
-                                    "snapshot: ${snapshot.data},  value: ${changePasswordForm.email}");
+
                                 if (snapshot.data == changePasswordForm.email) {
                                   _isConfirmUser = true;
                                   setState(() {});
