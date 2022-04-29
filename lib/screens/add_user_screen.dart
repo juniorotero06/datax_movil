@@ -42,7 +42,6 @@ class AddUserScreen extends StatelessWidget {
                 ],
               )),
               const SizedBox(height: 50),
-              const SizedBox(height: 50),
             ],
           ),
         ));
@@ -153,14 +152,20 @@ class _AddUserFormState extends State<_AddUserForm> {
                     if (!snapshot.hasData) {
                       return const Text("Sin datos...");
                     }
+                    addUserForm.licenseId = snapshot.data!;
+                    final controller =
+                        TextEditingController(text: snapshot.data);
                     return TextFormField(
-                      initialValue: snapshot.data,
+                      controller: controller,
                       keyboardType: TextInputType.number,
                       decoration: InputDecorations.authInputDecoration(
                           hint: "",
                           label: "Código de la licencia",
                           icon: Icons.document_scanner_outlined),
-                      onChanged: (value) => addUserForm.licenseId = value,
+                      onChanged: (value) {
+                        //value = controller.text;
+                        addUserForm.licenseId = value;
+                      },
                       validator: (value) {
                         return (value != null && value.length == 10)
                             ? null
@@ -170,10 +175,11 @@ class _AddUserFormState extends State<_AddUserForm> {
                   }),
               const SizedBox(height: 30),
               DropdownButtonFormField<String>(
-                value: "Usuario",
+                value: "User",
                 items: const [
-                  DropdownMenuItem(value: "Usuario", child: Text("Usuario")),
-                  DropdownMenuItem(value: "Contador", child: Text("Contador")),
+                  DropdownMenuItem(value: "User", child: Text("Usuario")),
+                  DropdownMenuItem(
+                      value: "Accountant", child: Text("Contador")),
                 ],
                 onChanged: (value) {
                   addUserForm.rol = value ?? "Usuario";
@@ -239,9 +245,9 @@ class _AddUserFormState extends State<_AddUserForm> {
                                 //addUserForm.isLoading = false;
                                 return Platform.isAndroid
                                     ? displayDialogAndroid(context, "Error",
-                                        "Ha ocurrido un error en el envio de la información")
+                                        "Ha ocurrido un error en el envio de la información, $resp")
                                     : displayDialogIOS(context, "Error",
-                                        "Ha ocurrido un error en el envio de la información");
+                                        "Ha ocurrido un error en el envio de la información, $resp");
                               }
                             });
                 },
