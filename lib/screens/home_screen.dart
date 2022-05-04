@@ -62,17 +62,9 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, CheckBalanceScreen.routerName);
+                        Navigator.pushNamed(
+                            context, FilterBalanceScreen.routerName);
                       }),
-                  const Divider(),
-                  Text("isDarkMode: ${Preferences.isDarkmode} "),
-                  const Divider(),
-                  Text("Genero: ${Preferences.gender}"),
-                  const Divider(),
-                  Text("Nombre de usuario: ${Preferences.name}"),
-                  const Divider(),
-                  Text("Apellido de usuario: ${storage.read(key: "fullName")}"),
                   const Divider(),
                 ],
               ),

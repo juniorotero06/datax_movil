@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 
-class AddUserFormProvider extends ChangeNotifier {
+class InputSearchProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  String name = "";
-  String lastname = "";
-  String email = "";
-  String password = "";
-  String phone = "";
-  String licenseId = "";
-  String rol = "User";
+  String search = "";
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
