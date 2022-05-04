@@ -41,13 +41,7 @@ class AuthServices extends ChangeNotifier {
   }
 
   Future logout() async {
-    await storage.delete(key: 'auth-token');
-    await storage.delete(key: 'fullName');
-    await storage.delete(key: 'email');
-    await storage.delete(key: 'rolId');
-    await storage.delete(key: 'rolName');
-    await storage.delete(key: 'licenseId');
-    await storage.delete(key: 'codLicense');
+    await storage.deleteAll();
     return;
   }
 

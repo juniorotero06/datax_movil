@@ -12,6 +12,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthServices()),
+      ChangeNotifierProvider(create: (_) => BalanceServices()),
       ChangeNotifierProvider(
           create: (_) => ThemeProvider(isDarkmode: Preferences.isDarkmode)),
     ],
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
               const ChangePasswordAdminScreen(),
           ChangeRoleToUserScreen.rounterName: (_) =>
               const ChangeRoleToUserScreen(),
-          CheckBalanceScreen.routerName: (_) => CheckBalanceScreen()
+          CheckBalanceScreen.routerName: (_) => CheckBalanceScreen(),
+          FilterBalanceScreen.routerName: (_) => FilterBalanceScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }
