@@ -20,7 +20,6 @@ class FilterBalanceScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Center(child: Text("Consulte su saldo de inventario")),
         ),
-        drawer: CustomDrawer(),
         body: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
             children: [

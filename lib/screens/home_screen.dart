@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
+                        Navigator.pushNamed(
                             context, FilterBalanceScreen.routerName);
                       }),
                   const Divider(),
