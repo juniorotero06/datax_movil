@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: NotificationsService.messengerKey,
         initialRoute: CheckAuthScreen.rounterName,
+        onGenerateRoute: _getRoute,
         routes: {
           LoginScreen.rounterName: (_) => LoginScreen(),
           RegisterScreen.rounterName: (_) => RegisterScreen(),
@@ -46,4 +47,32 @@ class MyApp extends StatelessWidget {
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }
+
+  Route<dynamic>? _getRoute(RouteSettings settings) {
+    if (settings.name == CheckBalanceScreen.routerName) {
+      // FooRoute constructor expects SomeObject
+      final args = settings.arguments as ScreenArguments;
+      return _buildRoute(
+          settings,
+          CheckBalanceScreen(
+            body: args.body,
+            endpoint: args.endpoint,
+          ));
+    }
+
+    return null;
+  }
+
+  MaterialPageRoute _buildRoute(RouteSettings settings, Widget builder) {
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (context) => builder,
+    );
+  }
+}
+
+class ScreenArguments {
+  final String endpoint;
+  final String body;
+  ScreenArguments(this.endpoint, this.body);
 }
