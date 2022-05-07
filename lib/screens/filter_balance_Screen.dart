@@ -1,3 +1,4 @@
+import 'package:datax_movil/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,7 +7,6 @@ import '../themes/app_theme.dart';
 import '../ui/input_decoration.dart';
 import '../screens/screens.dart';
 import '../services/services.dart';
-import '../widgets/widgets.dart';
 
 class FilterBalanceScreen extends StatelessWidget {
   static const String routerName = "filter_balance";
@@ -23,8 +23,10 @@ class FilterBalanceScreen extends StatelessWidget {
         body: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
             children: [
-              ChangeNotifierProvider(
-                create: (_) => InputSearchProvider(),
+              MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(create: (_) => InputSearchProvider()),
+                ],
                 child: FutureBuilder(
                   future: authServices.readToken("auth-token"),
                   builder:
@@ -91,7 +93,8 @@ class FilterBalanceScreen extends StatelessWidget {
                               print(
                                   "saldos: ${balanceServices.onDisplaySaldos}");
                               Navigator.pushNamed(
-                                  context, CheckBalanceScreen.routerName);
+                                  context, CheckBalanceScreen.routerName,
+                                  arguments: ScreenArguments("saldo", data));
                             }),
                         const SizedBox(height: 30),
                         _ButtonFilterBalance(
@@ -99,13 +102,15 @@ class FilterBalanceScreen extends StatelessWidget {
                             label: "Consultar Saldos Positivos",
                             onPress: () async {
                               String data = ">", page = "0", size = "10";
+
                               await balanceServices.getSaldo(
                                   data, page, size, snapshot.data!);
 
                               print(
                                   "saldos: ${balanceServices.onDisplaySaldos}");
                               Navigator.pushNamed(
-                                  context, CheckBalanceScreen.routerName);
+                                  context, CheckBalanceScreen.routerName,
+                                  arguments: ScreenArguments("saldo", data));
                             }),
                         const SizedBox(height: 30),
                         _ButtonFilterBalance(
@@ -119,7 +124,8 @@ class FilterBalanceScreen extends StatelessWidget {
                               print(
                                   "saldos: ${balanceServices.onDisplaySaldos}");
                               Navigator.pushNamed(
-                                  context, CheckBalanceScreen.routerName);
+                                  context, CheckBalanceScreen.routerName,
+                                  arguments: ScreenArguments("saldo", data));
                             }),
                         const SizedBox(height: 50),
                       ],
@@ -177,8 +183,10 @@ void _displayModal(
       barrierDismissible: false,
       context: context,
       builder: (context) {
-        return ChangeNotifierProvider(
-          create: (_) => InputSearchProvider(),
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => InputSearchProvider()),
+          ],
           child: _ModalForm(title: title, token: token, endpoint: endpoint),
         );
       });
@@ -204,6 +212,7 @@ class _ModalFormState extends State<_ModalForm> {
   Widget build(BuildContext context) {
     final inputSearch = Provider.of<InputSearchProvider>(context);
     final balanceServices = Provider.of<BalanceServices>(context);
+    //final requestProvider = Provider.of<RequestProvider>(context);
     return AlertDialog(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -248,23 +257,35 @@ class _ModalFormState extends State<_ModalForm> {
                       if (widget.endpoint == "bodega") {
                         await balanceServices.getBodega(
                             data, page, size, widget.token);
+                        Navigator.pushNamed(
+                            context, CheckBalanceScreen.routerName,
+                            arguments: ScreenArguments("bodega", data));
                       }
                       if (widget.endpoint == "codsaldo") {
                         await balanceServices.getCodSaldo(
                             data, page, size, widget.token);
+                        Navigator.pushNamed(
+                            context, CheckBalanceScreen.routerName,
+                            arguments: ScreenArguments("codsaldo", data));
                       }
                       if (widget.endpoint == "linea") {
                         await balanceServices.getLinea(
                             data, page, size, widget.token);
+                        Navigator.pushNamed(
+                            context, CheckBalanceScreen.routerName,
+                            arguments: ScreenArguments("linea", data));
                       }
                       if (widget.endpoint == "producto") {
                         await balanceServices.getProducto(
                             data, page, size, widget.token);
+                        Navigator.pushNamed(
+                            context, CheckBalanceScreen.routerName,
+                            arguments: ScreenArguments("producto", data));
                       }
 
                       print("saldos: ${balanceServices.onDisplaySaldos}");
-                      Navigator.pushNamed(
-                          context, CheckBalanceScreen.routerName);
+                      // Navigator.pushNamed(
+                      //     context, CheckBalanceScreen.routerName);
                     },
                     child: const Text("Buscar"))
               ],
