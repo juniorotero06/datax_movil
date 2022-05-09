@@ -39,6 +39,24 @@ class HomeScreen extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  FutureBuilder(
+                      future: authServices.readToken("fullName"),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Text("Sin datos...");
+                        }
+                        return Text("Bienvenido ${snapshot.data}");
+                      }),
+                  FutureBuilder(
+                      future: authServices.readToken("codLicense"),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Text("Sin datos...");
+                        }
+                        return Text("Licencia: ${snapshot.data}");
+                      }),
                   MaterialButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
