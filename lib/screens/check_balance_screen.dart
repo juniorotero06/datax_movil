@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:datax_movil/themes/app_theme.dart';
+import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,16 +24,21 @@ class CheckBalanceScreen extends StatelessWidget {
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: AppTheme.primary,
           title: const Center(child: Text("Tabla de Saldos")),
         ),
-        body: Column(
-          children: [
-            _SaldosDataTable(dataContent: dataContent),
-            _ButtomsPaginate(
-              body: args.body,
-              endpoint: args.endpoint,
-            )
-          ],
+        body: Background(
+          child: Column(
+            children: [
+              SizedBox(height: 130),
+              _SaldosDataTable(dataContent: dataContent),
+              SizedBox(height: 10),
+              _ButtomsPaginate(
+                body: args.body,
+                endpoint: args.endpoint,
+              )
+            ],
+          ),
         ));
   }
 }
@@ -48,6 +56,10 @@ class _SaldosDataTable extends StatelessWidget {
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          dataRowColor: MaterialStateColor.resolveWith(
+              (states) => Color.fromRGBO(255, 255, 255, 0.4)),
+          headingRowColor: MaterialStateColor.resolveWith(
+              (states) => Color.fromRGBO(145, 145, 145, 0.3)),
           columnSpacing: 15,
           columns: const [
             DataColumn(label: Text("Código de Saldo")),
@@ -96,6 +108,7 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
       future: authServices.readToken("auth-token"),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
                 onPressed: () async {
@@ -131,7 +144,10 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                 },
                 icon: const Icon(Icons.arrow_back_ios_new,
                     color: AppTheme.primary)),
-            Text("$actualPage | ${balanceServices.totalPages.toString()}"),
+            Text(
+              "$actualPage | ${balanceServices.totalPages.toString()}",
+              style: TextStyle(fontSize: 20),
+            ),
             IconButton(
                 color: AppTheme.primary,
                 onPressed: () async {
