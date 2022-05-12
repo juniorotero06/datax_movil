@@ -1,4 +1,4 @@
-import 'package:datax_movil/main.dart';
+import 'package:datax_movil/main.dart' show ScreenArguments;
 import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -97,8 +97,6 @@ class FilterBalanceScreen extends StatelessWidget {
                                 await balanceServices.getSaldo(
                                     data, page, size, snapshot.data!);
 
-                                print(
-                                    "saldos: ${balanceServices.onDisplaySaldos}");
                                 Navigator.pushNamed(
                                     context, CheckBalanceScreen.routerName,
                                     arguments: ScreenArguments("saldo", data));
@@ -113,8 +111,6 @@ class FilterBalanceScreen extends StatelessWidget {
                                 await balanceServices.getSaldo(
                                     data, page, size, snapshot.data!);
 
-                                print(
-                                    "saldos: ${balanceServices.onDisplaySaldos}");
                                 Navigator.pushNamed(
                                     context, CheckBalanceScreen.routerName,
                                     arguments: ScreenArguments("saldo", data));
@@ -128,8 +124,7 @@ class FilterBalanceScreen extends StatelessWidget {
 
                                 await balanceServices.getSaldo(
                                     data, page, size, snapshot.data!);
-                                print(
-                                    "saldos: ${balanceServices.onDisplaySaldos}");
+
                                 Navigator.pushNamed(
                                     context, CheckBalanceScreen.routerName,
                                     arguments: ScreenArguments("saldo", data));
@@ -259,9 +254,6 @@ class _ModalFormState extends State<_ModalForm> {
                           listen: false);
                       String data = inputSearch.search, page = "0", size = "10";
 
-                      print(
-                          "data: $data endpoint: ${widget.endpoint}  token:${widget.token} ");
-
                       if (widget.endpoint == "bodega") {
                         await balanceServices.getBodega(
                             data, page, size, widget.token);
@@ -290,10 +282,6 @@ class _ModalFormState extends State<_ModalForm> {
                             context, CheckBalanceScreen.routerName,
                             arguments: ScreenArguments("producto", data));
                       }
-
-                      print("saldos: ${balanceServices.onDisplaySaldos}");
-                      // Navigator.pushNamed(
-                      //     context, CheckBalanceScreen.routerName);
                     },
                     child: const Text("Buscar"))
               ],

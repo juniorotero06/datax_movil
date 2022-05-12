@@ -13,6 +13,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => AuthServices()),
       ChangeNotifierProvider(create: (_) => BalanceServices()),
+      ChangeNotifierProvider(create: (_) => AuxiliarServices()),
       ChangeNotifierProvider(
           create: (_) => ThemeProvider(isDarkmode: Preferences.isDarkmode)),
     ],
@@ -37,13 +38,13 @@ class MyApp extends StatelessWidget {
           HomeScreen.routerName: (_) => const HomeScreen(),
           SettingsScreen.routerName: (_) => const SettingsScreen(),
           CheckAuthScreen.rounterName: (_) => const CheckAuthScreen(),
-          AddUserScreen.rounterName: (_) => AddUserScreen(),
+          AddUserScreen.rounterName: (_) => const AddUserScreen(),
           ChangePasswordAdminScreen.rounterName: (_) =>
               const ChangePasswordAdminScreen(),
           ChangeRoleToUserScreen.rounterName: (_) =>
               const ChangeRoleToUserScreen(),
-          CheckBalanceScreen.routerName: (_) => CheckBalanceScreen(),
-          FilterBalanceScreen.routerName: (_) => FilterBalanceScreen()
+          CheckBalanceScreen.routerName: (_) => const CheckBalanceScreen(),
+          FilterBalanceScreen.routerName: (_) => const FilterBalanceScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }

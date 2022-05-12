@@ -11,7 +11,7 @@ class Background extends StatelessWidget {
       width: double.infinity,
       height: double.infinity,
       child: Stack(
-        children: [_PurpleBox(), _HeaderIcon(), this.child],
+        children: [_PurpleBox(), _HeaderIcon(), child],
       ),
     );
   }

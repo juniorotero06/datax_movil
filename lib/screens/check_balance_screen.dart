@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:datax_movil/themes/app_theme.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +28,9 @@ class CheckBalanceScreen extends StatelessWidget {
         body: Background(
           child: Column(
             children: [
-              SizedBox(height: 130),
+              const SizedBox(height: 130),
               _SaldosDataTable(dataContent: dataContent),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _ButtomsPaginate(
                 body: args.body,
                 endpoint: args.endpoint,
@@ -57,9 +55,9 @@ class _SaldosDataTable extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           dataRowColor: MaterialStateColor.resolveWith(
-              (states) => Color.fromRGBO(255, 255, 255, 0.4)),
+              (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
           headingRowColor: MaterialStateColor.resolveWith(
-              (states) => Color.fromRGBO(145, 145, 145, 0.3)),
+              (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
           columnSpacing: 15,
           columns: const [
             DataColumn(label: Text("Código de Saldo")),
@@ -115,9 +113,6 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   if (page >= 1) {
                     page--;
 
-                    print(
-                        "$actualPage // ${widget.endpoint} // ${widget.body} //$page");
-
                     if (widget.endpoint == "bodega") {
                       await balanceServices.getBodega(widget.body,
                           page.toString(), size.toString(), snapshot.data!);
@@ -146,16 +141,13 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                     color: AppTheme.primary)),
             Text(
               "$actualPage | ${balanceServices.totalPages.toString()}",
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
             IconButton(
                 color: AppTheme.primary,
                 onPressed: () async {
                   if (page < balanceServices.totalPages) {
                     page++;
-
-                    print(
-                        "$actualPage // ${widget.endpoint} // ${widget.body} //$page");
 
                     if (widget.endpoint == "bodega") {
                       await balanceServices.getBodega(widget.body,

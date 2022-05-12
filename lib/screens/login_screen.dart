@@ -137,7 +137,6 @@ class _LoginForm extends StatelessWidget {
                             Navigator.pushReplacementNamed(
                                 context, HomeScreen.routerName);
                           } else {
-                            print(resp);
                             NotificationsService.showSnackBar(resp);
                             loginForm.isLoading =
                                 false; //Validadr que el login sea correcto << backend
