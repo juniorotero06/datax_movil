@@ -6,6 +6,7 @@ import 'package:datax_movil/screens/screens.dart';
 import 'package:datax_movil/services/services.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
+import '../models/models.dart';
 import '../provider/search_balance_form_provider.dart';
 import '../themes/app_theme.dart';
 import '../ui/input_decoration.dart';
@@ -189,83 +190,66 @@ class _ModalFormState extends State<_ModalForm> {
       content: Form(
         key: inputSearch.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecorations.authInputDecoration(
-                    hint: "Codigo del Prodcuto", label: "", icon: Icons.search),
-                onChanged: (value) {
-                  inputSearch.codProducto = value;
-                },
-                validator: (value) {
-                  return (value != null)
-                      ? null
-                      : "El campo no puede estar vacío";
-                }),
-            const SizedBox(height: 10),
-            TextFormField(
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecorations.authInputDecoration(
-                    hint: "Nombre de Prodcuto", label: "", icon: Icons.search),
-                onChanged: (value) {
-                  inputSearch.producto = value;
-                },
-                validator: (value) {
-                  return (value != null)
-                      ? null
-                      : "El campo no puede estar vacío";
-                }),
-            const SizedBox(height: 10),
-            _ComboBox(inputSearch: inputSearch),
-            Row(
-              children: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancelar")),
-                TextButton(
-                    onPressed: () async {
-                      // final inputSearch =
-                      //     Provider.of<SearchBalanceFormProvider>(context,
-                      //         listen: false);
-                      // String data = inputSearch.search, page = "0", size = "10";
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecorations.authInputDecoration(
+                      hint: "",
+                      label: "Codigo del Producto",
+                      icon: Icons.search),
+                  onChanged: (value) {
+                    inputSearch.codProducto = value;
+                  },
+                  validator: (value) {
+                    return (value != null)
+                        ? null
+                        : "El campo no puede estar vacío";
+                  }),
+              const SizedBox(height: 10),
+              TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecorations.authInputDecoration(
+                      hint: "",
+                      label: "Nombre de Producto",
+                      icon: Icons.search),
+                  onChanged: (value) {
+                    inputSearch.producto = value;
+                  },
+                  validator: (value) {
+                    return (value != null)
+                        ? null
+                        : "El campo no puede estar vacío";
+                  }),
+              const SizedBox(height: 10),
+              _ComboBox(inputSearch: inputSearch),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancelar")),
+                  TextButton(
+                      onPressed: () async {
+                        final inputSearch =
+                            Provider.of<SearchBalanceFormProvider>(context,
+                                listen: false);
 
-                      // if (widget.endpoint == "bodega") {
-                      //   await balanceServices.getBodega(
-                      //       data, page, size, widget.token);
-                      //   Navigator.pushNamed(
-                      //       context, CheckBalanceScreen.routerName,
-                      //       arguments: ScreenArguments("bodega", data));
-                      // }
-                      // if (widget.endpoint == "codsaldo") {
-                      //   await balanceServices.getCodSaldo(
-                      //       data, page, size, widget.token);
-                      //   Navigator.pushNamed(
-                      //       context, CheckBalanceScreen.routerName,
-                      //       arguments: ScreenArguments("codsaldo", data));
-                      // }
-                      // if (widget.endpoint == "linea") {
-                      //   await balanceServices.getLinea(
-                      //       data, page, size, widget.token);
-                      //   Navigator.pushNamed(
-                      //       context, CheckBalanceScreen.routerName,
-                      //       arguments: ScreenArguments("linea", data));
-                      // }
-                      // if (widget.endpoint == "producto") {
-                      //   await balanceServices.getProducto(
-                      //       data, page, size, widget.token);
-                      //   Navigator.pushNamed(
-                      //       context, CheckBalanceScreen.routerName,
-                      //       arguments: ScreenArguments("producto", data));
-                      // }
-                    },
-                    child: const Text("Buscar"))
-              ],
-            )
-          ],
+                        print(inputSearch.codProducto);
+                        print(inputSearch.producto);
+                        print(inputSearch.bodega);
+                        print(inputSearch.linea);
+                        print(inputSearch.grupo);
+                      },
+                      child: const Text("Buscar"))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -283,11 +267,13 @@ class _ComboBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auxiliarServices = Provider.of<AuxiliarServices>(context);
-
+    var seen = Set<Grupos>();
+    List<Grupos> dataContentGrupos = auxiliarServices.onDisplayGrupo
+        .where((grupo) => seen.add(grupo))
+        .toList();
     return Column(
       children: [
         DropdownButtonFormField<String>(
-          value: "",
           items: auxiliarServices.onDisplayBodegas
               .map(
                 (index) => DropdownMenuItem(
@@ -303,9 +289,8 @@ class _ComboBox extends StatelessWidget {
               label: "Bodegas",
               icon: Icons.admin_panel_settings_outlined),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         DropdownButtonFormField<String>(
-          value: "",
           items: auxiliarServices.onDisplayLineas
               .map(
                 (index) => DropdownMenuItem(
@@ -321,23 +306,26 @@ class _ComboBox extends StatelessWidget {
               label: "Linea",
               icon: Icons.admin_panel_settings_outlined),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         DropdownButtonFormField<String>(
-          value: "",
-          items: auxiliarServices.onDisplayGrupo
+          style: const TextStyle(fontSize: 12, color: Colors.black),
+          items: dataContentGrupos
               .map(
                 (index) => DropdownMenuItem(
-                    value: index.descGru,
-                    child: Text("${index.codigoGru}-${index.descGru}")),
+                    value: "${index.tipoGru}${index.codigoGru}-${index.descGru}"
+                        .trim(),
+                    child: Text(
+                        "${index.tipoGru}-${index.codigoGru}-${index.descGru}")),
               )
               .toList(),
           onChanged: (value) {
             inputSearch.grupo = value ?? "";
           },
           decoration: InputDecorations.authInputDecoration(
-              hint: "",
-              label: "Grupo",
-              icon: Icons.admin_panel_settings_outlined),
+            hint: "",
+            label: "Grupo",
+            icon: Icons.admin_panel_settings_outlined,
+          ),
         ),
       ],
     );
