@@ -8,6 +8,7 @@ class SearchBalanceFormProvider extends ChangeNotifier {
   String codProducto = "";
   String grupo = "";
   String linea = "";
+  String saldo = "";
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

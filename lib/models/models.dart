@@ -11,3 +11,4 @@ export 'package:datax_movil/models/get_lineas_response.dart';
 export 'package:datax_movil/models/grupos.dart';
 export 'package:datax_movil/models/bodegas.dart';
 export 'package:datax_movil/models/lineas.dart';
+export 'package:datax_movil/models/get_filters_response.dart';

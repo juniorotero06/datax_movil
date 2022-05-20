@@ -44,6 +44,8 @@ class MyApp extends StatelessWidget {
           ChangeRoleToUserScreen.rounterName: (_) =>
               const ChangeRoleToUserScreen(),
           CheckBalanceScreen.routerName: (_) => const CheckBalanceScreen(),
+          CheckBalanceScreenWithGrupos.routerName: (_) =>
+              const CheckBalanceScreenWithGrupos(),
           FilterBalanceScreen.routerName: (_) => const FilterBalanceScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
@@ -51,13 +53,26 @@ class MyApp extends StatelessWidget {
 
   Route<dynamic>? _getRoute(RouteSettings settings) {
     if (settings.name == CheckBalanceScreen.routerName) {
-      // FooRoute constructor expects SomeObject
       final args = settings.arguments as ScreenArguments;
       return _buildRoute(
           settings,
           CheckBalanceScreen(
             body: args.body,
             endpoint: args.endpoint,
+          ));
+    }
+
+    if (settings.name == CheckBalanceScreenWithGrupos.routerName) {
+      final args = settings.arguments as ScreenArgumentsFilter;
+      return _buildRoute(
+          settings,
+          CheckBalanceScreenWithGrupos(
+            bodega: args.bodega,
+            codProducto: args.codProducto,
+            grupo: args.grupo,
+            linea: args.linea,
+            producto: args.producto,
+            saldo: args.saldo,
           ));
     }
 
@@ -76,4 +91,15 @@ class ScreenArguments {
   final String endpoint;
   final String body;
   ScreenArguments(this.endpoint, this.body);
+}
+
+class ScreenArgumentsFilter {
+  String bodega;
+  String producto;
+  String codProducto;
+  String grupo;
+  String linea;
+  String saldo;
+  ScreenArgumentsFilter(this.bodega, this.producto, this.codProducto,
+      this.grupo, this.linea, this.saldo);
 }

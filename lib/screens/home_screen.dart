@@ -6,10 +6,8 @@ import 'package:datax_movil/screens/screens.dart';
 import 'package:datax_movil/services/services.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
-import '../models/models.dart';
-import '../provider/search_balance_form_provider.dart';
 import '../themes/app_theme.dart';
-import '../ui/input_decoration.dart';
+import '../widgets/modal_home.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routerName = "home";
@@ -133,8 +131,8 @@ class HomeScreen extends StatelessWidget {
                               await auxiliarServices.getBodegas(snapshot.data!);
                               await auxiliarServices.getLineas(snapshot.data!);
                               await auxiliarServices.getGrupos(snapshot.data!);
-                              _displayModal(context, "Consultar Saldo",
-                                  snapshot.data!, "linea");
+                              displayModal(
+                                  context, "Consultar Saldo", snapshot.data!);
                             });
                       },
                     ),
@@ -143,191 +141,5 @@ class HomeScreen extends StatelessWidget {
                 ),
               ]),
         ));
-  }
-}
-
-void _displayModal(
-    BuildContext context, String title, String token, String endpoint) {
-  showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => SearchBalanceFormProvider()),
-          ],
-          child: _ModalForm(title: title, token: token, endpoint: endpoint),
-        );
-      });
-}
-
-class _ModalForm extends StatefulWidget {
-  const _ModalForm(
-      {Key? key,
-      required this.title,
-      required this.token,
-      required this.endpoint})
-      : super(key: key);
-
-  final String title;
-  final String token;
-  final String endpoint;
-  @override
-  State<_ModalForm> createState() => _ModalFormState();
-}
-
-class _ModalFormState extends State<_ModalForm> {
-  @override
-  Widget build(BuildContext context) {
-    final inputSearch = Provider.of<SearchBalanceFormProvider>(context);
-    final balanceServices = Provider.of<BalanceServices>(context);
-
-    return AlertDialog(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10)),
-      title: Text(widget.title),
-      content: Form(
-        key: inputSearch.formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecorations.authInputDecoration(
-                      hint: "",
-                      label: "Codigo del Producto",
-                      icon: Icons.search),
-                  onChanged: (value) {
-                    inputSearch.codProducto = value;
-                  },
-                  validator: (value) {
-                    return (value != null)
-                        ? null
-                        : "El campo no puede estar vacío";
-                  }),
-              const SizedBox(height: 10),
-              TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecorations.authInputDecoration(
-                      hint: "",
-                      label: "Nombre de Producto",
-                      icon: Icons.search),
-                  onChanged: (value) {
-                    inputSearch.producto = value;
-                  },
-                  validator: (value) {
-                    return (value != null)
-                        ? null
-                        : "El campo no puede estar vacío";
-                  }),
-              const SizedBox(height: 10),
-              _ComboBox(inputSearch: inputSearch),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancelar")),
-                  TextButton(
-                      onPressed: () async {
-                        final inputSearch =
-                            Provider.of<SearchBalanceFormProvider>(context,
-                                listen: false);
-
-                        print(inputSearch.codProducto);
-                        print(inputSearch.producto);
-                        print(inputSearch.bodega);
-                        print(inputSearch.linea);
-                        print(inputSearch.grupo);
-                      },
-                      child: const Text("Buscar"))
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ComboBox extends StatelessWidget {
-  const _ComboBox({
-    Key? key,
-    required this.inputSearch,
-  }) : super(key: key);
-
-  final SearchBalanceFormProvider inputSearch;
-
-  @override
-  Widget build(BuildContext context) {
-    final auxiliarServices = Provider.of<AuxiliarServices>(context);
-    var seen = Set<Grupos>();
-    List<Grupos> dataContentGrupos = auxiliarServices.onDisplayGrupo
-        .where((grupo) => seen.add(grupo))
-        .toList();
-    return Column(
-      children: [
-        DropdownButtonFormField<String>(
-          items: auxiliarServices.onDisplayBodegas
-              .map(
-                (index) => DropdownMenuItem(
-                    value: index.desBod,
-                    child: Text("${index.codBod}-${index.desBod}")),
-              )
-              .toList(),
-          onChanged: (value) {
-            inputSearch.bodega = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-              hint: "",
-              label: "Bodegas",
-              icon: Icons.admin_panel_settings_outlined),
-        ),
-        const SizedBox(height: 10),
-        DropdownButtonFormField<String>(
-          items: auxiliarServices.onDisplayLineas
-              .map(
-                (index) => DropdownMenuItem(
-                    value: index.desLinea,
-                    child: Text("${index.codLinea}-${index.desLinea}")),
-              )
-              .toList(),
-          onChanged: (value) {
-            inputSearch.linea = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-              hint: "",
-              label: "Linea",
-              icon: Icons.admin_panel_settings_outlined),
-        ),
-        const SizedBox(height: 10),
-        DropdownButtonFormField<String>(
-          style: const TextStyle(fontSize: 12, color: Colors.black),
-          items: dataContentGrupos
-              .map(
-                (index) => DropdownMenuItem(
-                    value: "${index.tipoGru}${index.codigoGru}-${index.descGru}"
-                        .trim(),
-                    child: Text(
-                        "${index.tipoGru}-${index.codigoGru}-${index.descGru}")),
-              )
-              .toList(),
-          onChanged: (value) {
-            inputSearch.grupo = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-            hint: "",
-            label: "Grupo",
-            icon: Icons.admin_panel_settings_outlined,
-          ),
-        ),
-      ],
-    );
   }
 }

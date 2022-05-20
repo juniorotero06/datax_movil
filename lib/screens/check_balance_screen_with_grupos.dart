@@ -3,23 +3,37 @@ import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/query_sql.dart';
 import '../main.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 
-class CheckBalanceScreen extends StatelessWidget {
-  static const String routerName = "check_balance";
-  final String? endpoint;
-  final String? body;
+class CheckBalanceScreenWithGrupos extends StatelessWidget {
+  static const String routerName = "check_balance_grupo";
+  final String? bodega;
+  final String? producto;
+  final String? codProducto;
+  final String? grupo;
+  final String? linea;
+  final String? saldo;
 
-  const CheckBalanceScreen({Key? key, this.endpoint, this.body})
+  const CheckBalanceScreenWithGrupos(
+      {Key? key,
+      this.bodega,
+      this.producto,
+      this.codProducto,
+      this.grupo,
+      this.linea,
+      this.saldo})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final balanceServices = Provider.of<BalanceServices>(context);
-    final List<Saldos> dataContent = balanceServices.onDisplaySaldos;
-    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    final List<SaldosWithGrupo> dataContent =
+        balanceServices.onDisplaySaldosWithGrupo;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as ScreenArgumentsFilter;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: AppTheme.primary,
@@ -37,8 +51,12 @@ class CheckBalanceScreen extends StatelessWidget {
                 _SaldosDataTable(dataContent: dataContent),
               const SizedBox(height: 10),
               _ButtomsPaginate(
-                body: args.body,
-                endpoint: args.endpoint,
+                bodega: args.bodega,
+                codProducto: args.codProducto,
+                grupo: args.grupo,
+                linea: args.linea,
+                producto: args.producto,
+                saldo: args.saldo,
               )
             ],
           ),
@@ -52,7 +70,7 @@ class _SaldosDataTable extends StatelessWidget {
     required this.dataContent,
   }) : super(key: key);
 
-  final List<Saldos> dataContent;
+  final List<SaldosWithGrupo> dataContent;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +88,7 @@ class _SaldosDataTable extends StatelessWidget {
             DataColumn(label: Text("Nombre del Producto")),
             DataColumn(label: Text("Nombre de Bodega")),
             DataColumn(label: Text("Línea")),
+            DataColumn(label: Text("Grupo")),
           ],
           rows: dataContent
               .map((index) => DataRow(cells: [
@@ -77,7 +96,8 @@ class _SaldosDataTable extends StatelessWidget {
                     DataCell(Center(child: Text(index.actualSdo.toString()))),
                     DataCell(Text(index.descrip)),
                     DataCell(Center(child: Text(index.desBod))),
-                    DataCell(Center(child: Text(index.desLinea)))
+                    DataCell(Center(child: Text(index.desLinea))),
+                    DataCell(Text(index.descGru)),
                   ]))
               .toList(),
         ));
@@ -85,12 +105,20 @@ class _SaldosDataTable extends StatelessWidget {
 }
 
 class _ButtomsPaginate extends StatefulWidget {
-  final String endpoint;
-  final String body;
+  final String bodega;
+  final String producto;
+  final String codProducto;
+  final String grupo;
+  final String linea;
+  final String saldo;
   const _ButtomsPaginate({
     Key? key,
-    required this.endpoint,
-    required this.body,
+    required this.bodega,
+    required this.producto,
+    required this.codProducto,
+    required this.grupo,
+    required this.linea,
+    required this.saldo,
   }) : super(key: key);
 
   @override
@@ -118,26 +146,18 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   if (page >= 1) {
                     page--;
 
-                    if (widget.endpoint == "bodega") {
-                      await balanceServices.getBodega(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "codsaldo") {
-                      await balanceServices.getCodSaldo(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "linea") {
-                      await balanceServices.getLinea(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "producto") {
-                      await balanceServices.getProducto(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "saldo") {
-                      await balanceServices.getSaldo(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
+                    String query = querySQL(
+                        widget.codProducto,
+                        widget.producto,
+                        widget.bodega,
+                        widget.linea,
+                        widget.grupo,
+                        widget.saldo,
+                        page,
+                        size);
+
+                    await balanceServices.getSaldosByFilters(query,
+                        page.toString(), size.toString(), snapshot.data!);
 
                     setState(() {});
                   }
@@ -154,27 +174,18 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   if (page < balanceServices.totalPages) {
                     page++;
 
-                    if (widget.endpoint == "bodega") {
-                      await balanceServices.getBodega(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "codsaldo") {
-                      await balanceServices.getCodSaldo(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "linea") {
-                      await balanceServices.getLinea(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "producto") {
-                      await balanceServices.getProducto(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
-                    if (widget.endpoint == "saldo") {
-                      await balanceServices.getSaldo(widget.body,
-                          page.toString(), size.toString(), snapshot.data!);
-                    }
+                    String query = querySQL(
+                        widget.codProducto,
+                        widget.producto,
+                        widget.bodega,
+                        widget.linea,
+                        widget.grupo,
+                        widget.saldo,
+                        page,
+                        size);
 
+                    await balanceServices.getSaldosByFilters(query,
+                        page.toString(), size.toString(), snapshot.data!);
                     setState(() {});
                   }
                 },
