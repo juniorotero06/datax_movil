@@ -37,7 +37,7 @@ class CheckBalanceScreenWithGrupos extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: AppTheme.primary,
-          title: const Center(child: Text("Tabla de Saldos")),
+          title: const Center(child: Text("Resultado de Consulta")),
         ),
         body: Background(
           child: Column(
@@ -127,7 +127,7 @@ class _ButtomsPaginate extends StatefulWidget {
 
 class _ButtomsPaginateState extends State<_ButtomsPaginate> {
   int page = 0;
-  int size = 10;
+  int size = 15;
 
   @override
   Widget build(BuildContext context) {

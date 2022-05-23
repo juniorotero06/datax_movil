@@ -114,7 +114,7 @@ class _ModalForm extends StatelessWidget {
                                 inputSearch.grupo,
                                 inputSearch.saldo,
                                 0,
-                                10);
+                                15);
                             print(query);
 
                             await balanceServices.getSaldosByFilters(
@@ -198,7 +198,7 @@ class _ComboBox extends StatelessWidget {
           items: auxiliarServices.onDisplayLineas
               .map(
                 (index) => DropdownMenuItem(
-                    value: index.desLinea,
+                    value: "${index.codLinea}||${index.desLinea}",
                     child: Text("${index.codLinea}-${index.desLinea}")),
               )
               .toList(),
@@ -228,8 +228,9 @@ class _ComboBox extends StatelessWidget {
           items: dataContentGrupos
               .map(
                 (index) => DropdownMenuItem(
-                    value: "${index.tipoGru}${index.codigoGru}-${index.descGru}"
-                        .trim(),
+                    value:
+                        "${index.tipoGru}${index.codigoGru}||${index.descGru}"
+                            .trim(),
                     child: Text(
                         "${index.tipoGru}-${index.codigoGru}-${index.descGru}")),
               )
