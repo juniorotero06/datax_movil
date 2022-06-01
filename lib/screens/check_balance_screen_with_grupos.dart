@@ -92,12 +92,12 @@ class _SaldosDataTable extends StatelessWidget {
           ],
           rows: dataContent
               .map((index) => DataRow(cells: [
-                    DataCell(Center(child: Text(index.codSdo))),
+                    DataCell(Center(child: Text(index.codSdo ?? ""))),
                     DataCell(Center(child: Text(index.actualSdo.toString()))),
-                    DataCell(Text(index.descrip)),
-                    DataCell(Center(child: Text(index.desBod))),
-                    DataCell(Center(child: Text(index.desLinea))),
-                    DataCell(Text(index.descGru)),
+                    DataCell(Text(index.descrip ?? "")),
+                    DataCell(Center(child: Text(index.desBod ?? ""))),
+                    DataCell(Center(child: Text(index.desLinea ?? ""))),
+                    DataCell(Text(index.descGru ?? "")),
                   ]))
               .toList(),
         ));

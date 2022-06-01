@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/provider/theme_provider.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
         title: 'DataX',
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: NotificationsService.messengerKey,

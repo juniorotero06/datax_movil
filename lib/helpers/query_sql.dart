@@ -9,7 +9,7 @@ String querySQL(String codProducto, String producto, String bodega,
       "SELECT a.des_bod, b.cod_sdo, c.descrip, b.actual_sdo, d.des_linea, e.desc_gru FROM insaldo as b LEFT JOIN inbodega as a ON a.cod_bod = b.bod_sdo LEFT JOIN initem as c ON c.cod_item = b.cod_sdo LEFT JOIN inlinea as d ON d.cod_linea = c.itm_linea LEFT JOIN ingrupo as e ON concat(e.tipo_gru, e.codigo_gru) = c.grupo WHERE ";
 
   if (codProducto != "") {
-    query = "$query c.cod_item LIKE '%$codProducto%'";
+    query = "$query b.cod_sdo LIKE '%$codProducto%'";
   }
 
   if (producto != "") {

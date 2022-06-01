@@ -69,35 +69,35 @@ class HomeScreen extends StatelessWidget {
                           );
                         }),
                     const SizedBox(height: 50),
-                    MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        disabledColor: Colors.grey,
-                        elevation: 0,
-                        color: AppTheme.primary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.attach_money,
-                                color: Colors.white, size: 30),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 20),
-                              child: const Text(
-                                "Consultar Saldo",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, FilterBalanceScreen.routerName);
-                        }),
-                    const SizedBox(
-                      height: 50,
-                    ),
+                    // MaterialButton(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(10)),
+                    //     disabledColor: Colors.grey,
+                    //     elevation: 0,
+                    //     color: AppTheme.primary,
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         const Icon(Icons.attach_money,
+                    //             color: Colors.white, size: 30),
+                    //         Container(
+                    //           padding: const EdgeInsets.symmetric(
+                    //               horizontal: 10, vertical: 20),
+                    //           child: const Text(
+                    //             "Consultar Saldo",
+                    //             style: TextStyle(
+                    //                 color: Colors.white, fontSize: 20),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     onPressed: () {
+                    //       Navigator.pushNamed(
+                    //           context, FilterBalanceScreen.routerName);
+                    //     }),
+                    // const SizedBox(
+                    //   height: 50,
+                    // ),
                     FutureBuilder(
                       future: authServices.readToken("auth-token"),
                       builder: (BuildContext context,
@@ -120,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 20),
                                   child: const Text(
-                                    "Consultar Saldo Modal",
+                                    "Consultar Saldo",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   ),

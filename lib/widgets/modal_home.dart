@@ -1,5 +1,6 @@
+import 'package:datax_movil/controllers/controllers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/state_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/services/services.dart';
@@ -26,7 +27,7 @@ void displayModal(BuildContext context, String title, String token) {
       });
 }
 
-class _ModalForm extends StatelessWidget {
+class _ModalForm extends StatefulWidget {
   const _ModalForm({
     Key? key,
     required this.title,
@@ -37,120 +38,187 @@ class _ModalForm extends StatelessWidget {
   final String token;
 
   @override
+  State<_ModalForm> createState() => _ModalFormState();
+}
+
+class _ModalFormState extends State<_ModalForm> {
+  late FocusNode fucusTextFieldCodProducto;
+  late FocusNode fucusTextFieldProducto;
+
+  @override
+  void initState() {
+    super.initState();
+    fucusTextFieldCodProducto = FocusNode();
+    fucusTextFieldProducto = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Limpia el nodo focus cuando se haga dispose al formulario
+    fucusTextFieldCodProducto.dispose();
+    fucusTextFieldProducto.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final inputSearch = Provider.of<SearchBalanceFormProvider>(context);
     final balanceServices = Provider.of<BalanceServices>(context);
     final authServices = Provider.of<AuthServices>(context);
-    const storage = FlutterSecureStorage();
-    return AlertDialog(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10)),
-      title: Text(title),
-      content: Form(
-        key: inputSearch.formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecorations.authInputDecoration(
-                      hint: "",
-                      label: "Codigo del Producto",
-                      icon: Icons.search),
-                  onChanged: (value) {
-                    inputSearch.codProducto = value;
-                  },
-                  validator: (value) {
-                    return (value != null)
-                        ? null
-                        : "El campo no puede estar vacío";
-                  }),
-              const SizedBox(height: 10),
-              TextFormField(
-                  autocorrect: false,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecorations.authInputDecoration(
-                      hint: "",
-                      label: "Nombre de Producto",
-                      icon: Icons.search),
-                  onChanged: (value) {
-                    inputSearch.producto = value;
-                  },
-                  validator: (value) {
-                    return (value != null)
-                        ? null
-                        : "El campo no puede estar vacío";
-                  }),
-              const SizedBox(height: 10),
-              _ComboBox(inputSearch: inputSearch),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  TextButton(
-                      onPressed: () async {
-                        // await storage.delete(key: "linea");
-                        // await storage.delete(key: "grupo");
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Cancelar")),
-                  FutureBuilder(
-                    future: authServices.readToken("auth-token"),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return TextButton(
-                          onPressed: () async {
-                            final inputSearch =
-                                Provider.of<SearchBalanceFormProvider>(context,
-                                    listen: false);
 
-                            String query = querySQL(
-                                inputSearch.codProducto,
-                                inputSearch.producto,
-                                inputSearch.bodega,
-                                inputSearch.linea,
-                                inputSearch.grupo,
-                                inputSearch.saldo,
-                                0,
-                                15);
-                            print(query);
+    return GetBuilder<ModalHomeController>(
+        init: ModalHomeController(),
+        builder: (_) {
+          final controllerCodProducto =
+              TextEditingController(text: _.codProducto);
+          final controllerProducto = TextEditingController(text: _.producto);
 
-                            await balanceServices.getSaldosByFilters(
-                                query, "0", "10", snapshot.data!);
+          return AlertDialog(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusDirectional.circular(10)),
+            title: Text(widget.title),
+            content: Form(
+              key: _.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              autocorrect: false,
+                              controller: controllerCodProducto,
+                              focusNode: fucusTextFieldCodProducto,
+                              autofocus: true,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecorations.authInputDecoration(
+                                  hint: "",
+                                  label: "Codigo del Producto",
+                                  icon: Icons.search),
+                              onChanged: (value) {
+                                _.codProducto = value;
+                              },
+                              validator: (value) {
+                                return (value != null)
+                                    ? null
+                                    : "El campo no puede estar vacío";
+                              }),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _.borrarCodProducto();
+                              FocusScope.of(context)
+                                  .requestFocus(fucusTextFieldProducto);
+                              controllerCodProducto.clear();
+                            },
+                            icon: const Icon(
+                              Icons.delete_forever,
+                              color: AppTheme.primary,
+                            ))
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              autocorrect: false,
+                              controller: controllerProducto,
+                              focusNode: fucusTextFieldProducto,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecorations.authInputDecoration(
+                                  hint: "",
+                                  label: "Nombre de Producto",
+                                  icon: Icons.search),
+                              onChanged: (value) {
+                                //inputSearch.producto = value;
+                                _.producto = value;
+                              },
+                              validator: (value) {
+                                return (value != null)
+                                    ? null
+                                    : "El campo no puede estar vacío";
+                              }),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _.borrarProducto();
+                              FocusScope.of(context)
+                                  .requestFocus(fucusTextFieldCodProducto);
+                              controllerProducto.clear();
+                            },
+                            icon: const Icon(
+                              Icons.delete_forever,
+                              color: AppTheme.primary,
+                            ))
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    //_ComboBox(inputSearch: inputSearch),
+                    _ComboBox(inputSearch: inputSearch),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancelar")),
+                        TextButton(
+                            onPressed: () async {
+                              _.limpiar();
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: const Text("Limpiar")),
+                        FutureBuilder(
+                          future: authServices.readToken("auth-token"),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            return TextButton(
+                                onPressed: () async {
+                                  String query = querySQL(
+                                      _.codProducto,
+                                      _.producto,
+                                      _.bodega,
+                                      _.linea,
+                                      _.grupo,
+                                      _.saldo,
+                                      0,
+                                      15);
+                                  print(query);
 
-                            Navigator.pushNamed(context,
-                                CheckBalanceScreenWithGrupos.routerName,
-                                arguments: ScreenArgumentsFilter(
-                                    inputSearch.bodega,
-                                    inputSearch.producto,
-                                    inputSearch.codProducto,
-                                    inputSearch.grupo,
-                                    inputSearch.linea,
-                                    inputSearch.saldo));
+                                  await balanceServices.getSaldosByFilters(
+                                      query, "0", "10", snapshot.data!);
 
-                            // await storage.delete(key: "linea");
-                            // await storage.delete(key: "grupo");
+                                  Navigator.pushNamed(context,
+                                      CheckBalanceScreenWithGrupos.routerName,
+                                      arguments: ScreenArgumentsFilter(
+                                          _.bodega,
+                                          _.producto,
+                                          _.codProducto,
+                                          _.grupo,
+                                          _.linea,
+                                          _.saldo));
+                                },
+                                child: const Text("Buscar"));
                           },
-                          child: const Text("Buscar"));
-                    },
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 
 class _ComboBox extends StatelessWidget {
-  const _ComboBox({
-    Key? key,
-    required this.inputSearch,
-  }) : super(key: key);
+  const _ComboBox({Key? key, required this.inputSearch}) : super(key: key);
 
   final SearchBalanceFormProvider inputSearch;
 
@@ -163,108 +231,174 @@ class _ComboBox extends StatelessWidget {
     List<Grupos> dataContentGrupos = auxiliarServices.onDisplayGrupo
         .where((grupo) => seen.add(grupo))
         .toList();
-    return Column(
-      children: [
-        DropdownButtonFormField<String>(
-          items: auxiliarServices.onDisplayBodegas
-              .map(
-                (index) => DropdownMenuItem(
-                    value: index.desBod,
-                    child: Text("${index.codBod}-${index.desBod}")),
-              )
-              .toList(),
-          onChanged: (value) {
-            inputSearch.bodega = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-              hint: "",
-              label: "Bodegas",
-              icon: Icons.admin_panel_settings_outlined),
-        ),
-        const SizedBox(height: 10),
-        //TODO: IF
-        // if (auxiliarServices.onDisplayLineas.length > 40)
-        //   Row(
-        //     children: [
-        //       Expanded(
-        //         child: Text("Linea: ${inputSearch.linea}"),
-        //       ),
-        //       const SizedBox(width: 20),
-        //       const _BotonExaminar(label: '...', endpoint: "linea"),
-        //     ],
-        //   ),
-        // if (auxiliarServices.onDisplayLineas.length <= 40)
-        DropdownButtonFormField<String>(
-          items: auxiliarServices.onDisplayLineas
-              .map(
-                (index) => DropdownMenuItem(
-                    value: "${index.codLinea}||${index.desLinea}",
-                    child: Text("${index.codLinea}-${index.desLinea}")),
-              )
-              .toList(),
-          onChanged: (value) {
-            inputSearch.linea = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-              hint: "",
-              label: "Linea",
-              icon: Icons.admin_panel_settings_outlined),
-        ),
-        const SizedBox(height: 10),
-        //TODO: IF
-        // if (auxiliarServices.onDisplayGrupo.length > 40)
-        //   Row(
-        //     children: [
-        //       Expanded(
-        //         child: Text("Grupo: ${inputSearch.grupo}"),
-        //       ),
-        //       const SizedBox(width: 20),
-        //       const _BotonExaminar(label: '...', endpoint: "grupo"),
-        //     ],
-        //   ),
-        // if (auxiliarServices.onDisplayGrupo.length <= 40)
-        DropdownButtonFormField<String>(
-          style: const TextStyle(fontSize: 12, color: Colors.black),
-          items: dataContentGrupos
-              .map(
-                (index) => DropdownMenuItem(
-                    value:
-                        "${index.tipoGru}${index.codigoGru}||${index.descGru}"
-                            .trim(),
-                    child: Text(
-                        "${index.tipoGru}-${index.codigoGru}-${index.descGru}")),
-              )
-              .toList(),
-          onChanged: (value) {
-            inputSearch.grupo = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-            hint: "",
-            label: "Grupo",
-            icon: Icons.admin_panel_settings_outlined,
+    return GetBuilder<ModalHomeController>(builder: (_) {
+      final controllerBodegas = TextEditingController(text: _.bodega);
+      final controllerLinea = TextEditingController(text: _.linea);
+      final controllerGrupo = TextEditingController(text: _.grupo);
+      return Column(
+        children: [
+          if (auxiliarServices.onDisplayBodegas.length > 40)
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                      autocorrect: false,
+                      readOnly: true,
+                      controller: controllerBodegas,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecorations.authInputDecoration(
+                          hint: "", label: "Bodega", icon: Icons.search),
+                      onChanged: (value) {
+                        _.bodega = value;
+                      },
+                      validator: (value) {
+                        return (value != null)
+                            ? null
+                            : "El campo no puede estar vacío";
+                      }),
+                ),
+                const SizedBox(width: 20),
+                const _BotonExaminar(label: '...', endpoint: "bodega"),
+              ],
+            ),
+          if (auxiliarServices.onDisplayLineas.length <= 40)
+            DropdownButtonFormField<String>(
+              style: const TextStyle(fontSize: 12, color: Colors.black),
+              items: auxiliarServices.onDisplayBodegas
+                  .map(
+                    (index) => DropdownMenuItem(
+                        value: index.desBod,
+                        child: Text("${index.codBod}-${index.desBod}")),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                //inputSearch.bodega = value ?? "";
+                _.bodega = value ?? "";
+              },
+              decoration: InputDecorations.authInputDecoration(
+                  hint: "",
+                  label: "Bodegas",
+                  icon: Icons.admin_panel_settings_outlined),
+            ),
+          const SizedBox(height: 10),
+          //TODO: IF
+          if (auxiliarServices.onDisplayLineas.length > 40)
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                      autocorrect: false,
+                      controller: controllerLinea,
+                      readOnly: true,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecorations.authInputDecoration(
+                          hint: "", label: "Linea", icon: Icons.search),
+                      onChanged: (value) {
+                        //inputSearch.codProducto = value;
+                        _.linea = value;
+                      },
+                      validator: (value) {
+                        return (value != null)
+                            ? null
+                            : "El campo no puede estar vacío";
+                      }),
+                ),
+                const SizedBox(width: 20),
+                const _BotonExaminar(label: '...', endpoint: "linea"),
+              ],
+            ),
+          if (auxiliarServices.onDisplayLineas.length <= 40)
+            DropdownButtonFormField<String>(
+              items: auxiliarServices.onDisplayLineas
+                  .map(
+                    (index) => DropdownMenuItem(
+                        value: "${index.codLinea}||${index.desLinea}",
+                        child: Text("${index.codLinea}-${index.desLinea}")),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                //inputSearch.linea = value ?? "";
+                _.linea = value ?? "";
+              },
+              decoration: InputDecorations.authInputDecoration(
+                  hint: "",
+                  label: "Linea",
+                  icon: Icons.admin_panel_settings_outlined),
+            ),
+          const SizedBox(height: 10),
+          //TODO: IF
+          if (auxiliarServices.onDisplayGrupo.length > 40)
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                      autocorrect: false,
+                      controller: controllerGrupo,
+                      readOnly: true,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecorations.authInputDecoration(
+                          hint: "", label: "Grupo", icon: Icons.search),
+                      onChanged: (value) {
+                        //inputSearch.codProducto = value;
+                        _.grupo = value;
+                      },
+                      validator: (value) {
+                        return (value != null)
+                            ? null
+                            : "El campo no puede estar vacío";
+                      }),
+                ),
+                const SizedBox(width: 20),
+                const _BotonExaminar(label: '...', endpoint: "grupo"),
+              ],
+            ),
+          if (auxiliarServices.onDisplayGrupo.length <= 40)
+            DropdownButtonFormField<String>(
+              style: const TextStyle(fontSize: 12, color: Colors.black),
+              items: dataContentGrupos
+                  .map(
+                    (index) => DropdownMenuItem(
+                        value:
+                            "${index.tipoGru}${index.codigoGru}||${index.descGru}"
+                                .trim(),
+                        child: Text(
+                            "${index.tipoGru}-${index.codigoGru}-${index.descGru}")),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                //inputSearch.grupo = value ?? "";
+                _.grupo = value ?? "";
+              },
+              decoration: InputDecorations.authInputDecoration(
+                hint: "",
+                label: "Grupo",
+                icon: Icons.admin_panel_settings_outlined,
+              ),
+            ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            items: const [
+              DropdownMenuItem(value: "", child: Text("Sin Filtro de Saldo")),
+              DropdownMenuItem(
+                  value: "Saldos Positivos", child: Text("Saldos Positivos")),
+              DropdownMenuItem(
+                  value: "Saldos Iguales a 0",
+                  child: Text("Saldos Iguales a 0")),
+              DropdownMenuItem(
+                  value: "Saldos Negativos", child: Text("Saldos Negativos")),
+            ],
+            onChanged: (value) {
+              // inputSearch.saldo = value ?? "";
+              _.saldo = value ?? "";
+            },
+            decoration: InputDecorations.authInputDecoration(
+                hint: "",
+                label: "Saldos",
+                icon: Icons.admin_panel_settings_outlined),
           ),
-        ),
-        const SizedBox(height: 10),
-        DropdownButtonFormField<String>(
-          items: const [
-            DropdownMenuItem(value: "", child: Text("Sin Filtro de Saldo")),
-            DropdownMenuItem(
-                value: "Saldos Positivos", child: Text("Saldos Positivos")),
-            DropdownMenuItem(
-                value: "Saldos Iguales a 0", child: Text("Saldos Iguales a 0")),
-            DropdownMenuItem(
-                value: "Saldos Negativos", child: Text("Saldos Negativos")),
-          ],
-          onChanged: (value) {
-            inputSearch.saldo = value ?? "";
-          },
-          decoration: InputDecorations.authInputDecoration(
-              hint: "",
-              label: "Saldos",
-              icon: Icons.admin_panel_settings_outlined),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 
@@ -279,164 +413,48 @@ class _BotonExaminar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      disabledColor: Colors.grey,
-      elevation: 0,
-      color: AppTheme.primary,
-      onPressed: () {
-        _modalExaminar(context, label, endpoint);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.search, color: Colors.white, size: 15),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            child: Text(
-              label,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
+    return GetBuilder<ModalHomeController>(
+      builder: (_) => MaterialButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        disabledColor: Colors.grey,
+        elevation: 0,
+        color: AppTheme.primary,
+        onPressed: () {
+          _.showModalDataBodega(endpoint);
+          //_modalExaminar(context, label, endpoint);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.search, color: Colors.white, size: 15),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-void _modalExaminar(BuildContext context, String title, String endpoint) {
-  showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => SearchBalanceFormProvider()),
-          ],
-          child: _ModalExaminar(title: title, endpoint: endpoint),
-        );
-      });
-}
+// void _modalExaminar(BuildContext context, String title, String endpoint) {
+//   showDialog(
+//       barrierDismissible: false,
+//       context: context,
+//       builder: (context) {
+//         return MultiProvider(
+//           providers: [
+//             ChangeNotifierProvider(create: (_) => SearchBalanceFormProvider()),
+//           ],
+//           child: ModalExaminar(title: title, endpoint: endpoint),
+//         );
+//       });
+// }
 
-class _ModalExaminar extends StatelessWidget {
-  const _ModalExaminar({Key? key, required this.title, required this.endpoint})
-      : super(key: key);
-
-  final String title;
-
-  final String endpoint;
-
-  @override
-  Widget build(BuildContext context) {
-    final inputSearch = Provider.of<SearchBalanceFormProvider>(context);
-    final auxiliarServices = Provider.of<AuxiliarServices>(context);
-    const storage = FlutterSecureStorage();
-
-    if (endpoint == "linea") {
-      return AlertDialog(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusDirectional.circular(10)),
-          title: Text(title),
-          content: Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: DataTable(
-                dataRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
-                headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
-                columnSpacing: 15,
-                columns: const [
-                  DataColumn(label: Text("Código de Linea")),
-                  DataColumn(label: Text("Descripción")),
-                ],
-                rows: auxiliarServices.onDisplayLineas
-                    .map((index) => DataRow(cells: [
-                          DataCell(Center(child: Text(index.codLinea)),
-                              onTap: () async {
-                            inputSearch.linea = index.desLinea;
-                            await storage.write(
-                                key: "linea", value: inputSearch.linea);
-                            print(inputSearch.linea);
-                            Navigator.pop(context);
-                          }),
-                          DataCell(Center(child: Text(index.desLinea)),
-                              onTap: () async {
-                            inputSearch.linea = index.desLinea;
-                            await storage.write(
-                                key: "linea", value: inputSearch.linea);
-                            print(inputSearch.linea);
-                            Navigator.pop(context);
-                            //Todo set State
-                          }),
-                        ]))
-                    .toList(),
-              ),
-            ),
-          ));
-    }
-
-    if (endpoint == "grupo") {
-      return AlertDialog(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusDirectional.circular(10)),
-          title: Text(title),
-          content: Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: DataTable(
-                dataRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
-                headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
-                columnSpacing: 50,
-                columns: const [
-                  DataColumn(label: Text("Tipo")),
-                  DataColumn(label: Text("Cód")),
-                  DataColumn(label: Text("Descrip")),
-                ],
-                rows: auxiliarServices.onDisplayGrupo
-                    .map((index) => DataRow(cells: [
-                          DataCell(Center(child: Text(index.tipoGru)),
-                              onTap: () {
-                            inputSearch.grupo =
-                                "${index.tipoGru}${index.codigoGru}-${index.descGru}"
-                                    .trim();
-                          }),
-                          DataCell(
-                              Center(child: Text(index.codigoGru.toString())),
-                              onTap: () async {
-                            inputSearch.grupo =
-                                "${index.tipoGru}${index.codigoGru}-${index.descGru}"
-                                    .trim();
-                            await storage.write(
-                                key: "grupo", value: inputSearch.grupo);
-                            print(inputSearch.grupo);
-                            Navigator.pop(context);
-                          }),
-                          DataCell(Center(child: Text(index.descGru)),
-                              onTap: () async {
-                            inputSearch.grupo =
-                                "${index.tipoGru}${index.codigoGru}-${index.descGru}"
-                                    .trim();
-                            await storage.write(
-                                key: "grupo", value: inputSearch.grupo);
-                            print(inputSearch.grupo);
-                            Navigator.pop(context);
-                          }),
-                        ]))
-                    .toList(),
-              ),
-            ),
-          ));
-    }
-    return Container();
-  }
-}

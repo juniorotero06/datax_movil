@@ -41,20 +41,20 @@ class PaginateWithGrupos {
 
 class SaldosWithGrupo {
   SaldosWithGrupo({
-    required this.desBod,
-    required this.codSdo,
-    required this.descrip,
     required this.actualSdo,
-    required this.desLinea,
-    required this.descGru,
+    this.desBod,
+    this.codSdo,
+    this.descrip,
+    this.desLinea,
+    this.descGru,
   });
 
-  String desBod;
-  String codSdo;
-  String descrip;
-  int actualSdo;
-  String desLinea;
-  String descGru;
+  String? desBod;
+  String? codSdo;
+  String? descrip;
+  dynamic actualSdo;
+  String? desLinea;
+  String? descGru;
 
   factory SaldosWithGrupo.fromJson(String str) =>
       SaldosWithGrupo.fromMap(json.decode(str));
