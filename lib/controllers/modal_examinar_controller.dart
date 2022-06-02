@@ -8,13 +8,9 @@ class ModalExaminarController extends GetxController {
 
   String _endpoint = "";
   String get endpoint => _endpoint;
-  // String get inputBodega => _inputBodega;
-  // String get inputLinea => _inputLinea;
-  // String get inputGrupo => _inputGrupo;
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     _endpoint = Get.arguments;
   }

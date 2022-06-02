@@ -6,6 +6,8 @@ class BalanceServices extends ChangeNotifier {
   final String _baseUrl = "10.0.3.2:3001";
   List<Saldos> onDisplaySaldos = [];
   List<SaldosWithGrupo> onDisplaySaldosWithGrupo = [];
+  List<Cartera> onDisplayCartera = [];
+  List<CarteraCXPC> onDisplayCarteraCXPX = [];
   int totalData = 0, totalPages = 0;
 
   BalanceServices() {
@@ -14,6 +16,8 @@ class BalanceServices extends ChangeNotifier {
     getLinea;
     getProducto;
     getSaldo;
+    getSaldosByFilters;
+    getCartera;
   }
 
   getBodega(String bodega, String page, String size, String token) async {
@@ -132,5 +136,26 @@ class BalanceServices extends ChangeNotifier {
     totalPages = getSaldoswithGrupo.results.totalPages;
     onDisplaySaldosWithGrupo = getSaldoswithGrupo.results.content;
     notifyListeners();
+  }
+
+  getCartera(String query, String token, bool isCXPX) async {
+    final Map<String, String> bodyQuery = {"query": query};
+
+    final url = Uri.http(_baseUrl, "/api/cartera_cxc_cxp");
+
+    final resp = await http.post(url, body: bodyQuery, headers: {
+      "auth-token": token,
+    });
+
+    if (isCXPX) {
+      final getCartera = SaldoCarteraCxpc.fromJson(resp.body);
+      onDisplayCarteraCXPX = getCartera.results.content;
+      notifyListeners();
+    }
+    if (!isCXPX) {
+      final getCartera = SaldoCartera.fromJson(resp.body);
+      onDisplayCartera = getCartera.results.content;
+      notifyListeners();
+    }
   }
 }

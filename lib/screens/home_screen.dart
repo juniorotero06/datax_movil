@@ -1,3 +1,4 @@
+import 'package:datax_movil/widgets/modal_cartera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -136,7 +137,42 @@ class HomeScreen extends StatelessWidget {
                             });
                       },
                     ),
-                    const Divider(),
+                    const SizedBox(height: 50),
+                    FutureBuilder(
+                      future: authServices.readToken("auth-token"),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        final auxiliarServices =
+                            Provider.of<AuxiliarServices>(context);
+
+                        return MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            disabledColor: Colors.grey,
+                            elevation: 0,
+                            color: AppTheme.primary,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.attach_money,
+                                    color: Colors.white, size: 30),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 20),
+                                  child: const Text(
+                                    "Consultar Cartera",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onPressed: () async {
+                              displayModalCartera(
+                                  context, "Consultar Cartera", snapshot.data!);
+                            });
+                      },
+                    ),
                   ],
                 ),
               ]),
