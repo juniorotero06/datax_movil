@@ -84,16 +84,18 @@ class _ModalCartera extends StatelessWidget {
                           } else {
                             isCXPC = false;
                           }
-                          //TODO query
+
                           String query =
                               queryCXX_CXP(_.cXCEnabled, _.cxPEnabled, isCXPC);
                           print(query);
-                          //TODO Peticion al backend con el query
-                          await balanceServices.getCartera(
-                              query, token, isCXPC);
-                          //TODO Get.to
-                          await Get.to(const CheckCarteraScreen(),
-                              arguments: isCXPC);
+
+                          if (query != "") {
+                            await balanceServices.getCartera(
+                                query, token, isCXPC);
+
+                            await Get.to(const CheckCarteraScreen(),
+                                arguments: isCXPC);
+                          }
                         },
                         child: const Text("Buscar"));
                   },

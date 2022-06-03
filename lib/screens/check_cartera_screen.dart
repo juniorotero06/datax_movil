@@ -1,7 +1,11 @@
 import 'package:datax_movil/controllers/check_cartera_controller.dart';
+import 'package:datax_movil/controllers/controllers.dart';
+import 'package:datax_movil/helpers/query_sql.dart';
 import 'package:datax_movil/models/models.dart';
+import 'package:datax_movil/screens/check_cartera_detail.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -21,11 +25,39 @@ class CheckCarteraScreen extends StatelessWidget {
       body: Background(
           child: GetBuilder<CheckCarteraController>(
         init: CheckCarteraController(),
-        builder: (_) => Column(
-          children: [
-            if (!_.isCXPC) const _DataTableCartera(),
-            if (_.isCXPC) const _DataTableCarteraCXCP()
-          ],
+        builder: (_) => Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 130),
+              if (!_.isCXPC) const _DataTableCartera(),
+              if (_.isCXPC) const _DataTableCarteraCXCP(),
+              const SizedBox(height: 30),
+              if (_.isCXPC)
+                MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    disabledColor: Colors.grey,
+                    elevation: 0,
+                    color: AppTheme.primary,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 20),
+                          child: const Text(
+                            "Generar Gráfica",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                        const Icon(Icons.auto_graph,
+                            color: Colors.white, size: 30),
+                      ],
+                    ),
+                    onPressed: () {})
+            ],
+          ),
         ),
       )),
     );
@@ -40,27 +72,52 @@ class _DataTableCarteraCXCP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final balanceServices = Provider.of<BalanceServices>(context);
+    final authServices = Provider.of<AuthServices>(context);
     final List<CarteraCXPC> dataContent = balanceServices.onDisplayCarteraCXPX;
-    return DataTable(
-        dataRowColor: MaterialStateColor.resolveWith(
-            (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
-        headingRowColor: MaterialStateColor.resolveWith(
-            (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
-        columnSpacing: 15,
-        columns: const [
-          DataColumn(label: Text("Clase")),
-          DataColumn(label: Text("Tipo")),
-          DataColumn(label: Text("Documentos")),
-          DataColumn(label: Text("Valor de Saldo")),
-        ],
-        rows: dataContent
-            .map((index) => DataRow(cells: [
-                  DataCell(Text(index.clase ?? "")),
-                  DataCell(Text(index.tipo ?? "")),
-                  DataCell(Text(index.documentos.toString())),
-                  DataCell(Text(index.vrSaldo.toString())),
-                ]))
-            .toList());
+    return FutureBuilder(
+        future: authServices.readToken("auth-token"),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          return GetBuilder<ModalCarteraController>(
+            init: ModalCarteraController(),
+            builder: (_) => DataTable(
+                dataRowColor: MaterialStateColor.resolveWith(
+                    (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
+                headingRowColor: MaterialStateColor.resolveWith(
+                    (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
+                columnSpacing: 15,
+                columns: const [
+                  DataColumn(label: Center(child: Text("Clase"))),
+                  DataColumn(label: Center(child: Text("Tipo"))),
+                  DataColumn(label: Center(child: Text("Documentos"))),
+                  DataColumn(label: Center(child: Text("Valor de Saldo"))),
+                  DataColumn(label: Center(child: Text("Ver"))),
+                ],
+                rows: dataContent
+                    .map((index) => DataRow(cells: [
+                          DataCell(Center(child: Text(index.clase ?? ""))),
+                          DataCell(Center(child: Text(index.tipo ?? ""))),
+                          DataCell(
+                              Center(child: Text(index.documentos.toString()))),
+                          DataCell(
+                              Center(child: Text(index.vrSaldo.toString()))),
+                          DataCell(Center(
+                            child: IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () async {
+                                _.clase = index.clase!;
+                                String query = queryDetails_CXPC(
+                                    index.clase!, index.tipo!, 0, 10);
+                                print(query);
+                                await balanceServices.getDetail_CxPC(
+                                    query, "0", "10", snapshot.data!);
+                                await Get.to(const CheckCarteraDetail());
+                              },
+                            ),
+                          ))
+                        ]))
+                    .toList()),
+          );
+        });
   }
 }
 
@@ -72,26 +129,61 @@ class _DataTableCartera extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final balanceServices = Provider.of<BalanceServices>(context);
-
+    final authServices = Provider.of<AuthServices>(context);
     final List<Cartera> dataContent = balanceServices.onDisplayCartera;
 
-    return DataTable(
-        dataRowColor: MaterialStateColor.resolveWith(
-            (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
-        headingRowColor: MaterialStateColor.resolveWith(
-            (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
-        columnSpacing: 15,
-        columns: const [
-          DataColumn(label: Text("Tipo")),
-          DataColumn(label: Text("Documentos")),
-          DataColumn(label: Text("Valor de Saldo")),
-        ],
-        rows: dataContent
-            .map((index) => DataRow(cells: [
-                  DataCell(Text(index.tipo ?? "")),
-                  DataCell(Text(index.documentos.toString())),
-                  DataCell(Text(index.vrSaldo.toString())),
-                ]))
-            .toList());
+    return GetBuilder<ModalCarteraController>(
+      init: ModalCarteraController(),
+      builder: (_) => FutureBuilder(
+        future: authServices.readToken("auth-token"),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
+            DataTable(
+                dataRowColor: MaterialStateColor.resolveWith(
+                    (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
+                headingRowColor: MaterialStateColor.resolveWith(
+                    (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
+                columnSpacing: 15,
+                columns: const [
+                  DataColumn(label: Center(child: Text("Tipo"))),
+                  DataColumn(label: Center(child: Text("Documentos"))),
+                  DataColumn(label: Center(child: Text("Valor de Saldo"))),
+                  DataColumn(label: Center(child: Text("Ver"))),
+                ],
+                rows: dataContent
+                    .map((index) => DataRow(cells: [
+                          DataCell(Center(child: Text(index.tipo ?? ""))),
+                          DataCell(
+                              Center(child: Text(index.documentos.toString()))),
+                          DataCell(
+                              Center(child: Text(index.vrSaldo.toString()))),
+                          DataCell(Center(
+                            child: IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () async {
+                                if (_.cXCEnabled) {
+                                  _.tipo = index.tipo!;
+                                  String query = queryDetails_CXPC(
+                                      "CXC", index.tipo!, 0, 10);
+                                  print(query);
+                                  await balanceServices.getDetail_CxPC(
+                                      query, "0", "10", snapshot.data!);
+                                  await Get.to(const CheckCarteraDetail());
+                                }
+                                if (_.cxPEnabled) {
+                                  _.tipo = index.tipo!;
+                                  String query = queryDetails_CXPC(
+                                      "CXP", index.tipo!, 0, 10);
+                                  print(query);
+                                  await balanceServices.getDetail_CxPC(
+                                      query, "0", "10", snapshot.data!);
+                                  await Get.to(const CheckCarteraDetail());
+                                }
+                              },
+                            ),
+                          ))
+                        ]))
+                    .toList()),
+      ),
+    );
   }
 }
