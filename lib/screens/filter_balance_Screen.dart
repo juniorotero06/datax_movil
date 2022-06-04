@@ -1,4 +1,5 @@
-import 'package:datax_movil/main.dart';
+import 'package:datax_movil/main.dart' show ScreenArguments;
+import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,122 +19,124 @@ class FilterBalanceScreen extends StatelessWidget {
     final balanceServices = Provider.of<BalanceServices>(context);
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: AppTheme.primary,
           title: const Center(child: Text("Consulte su saldo de inventario")),
         ),
-        body: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-            children: [
-              MultiProvider(
-                providers: [
-                  ChangeNotifierProvider(create: (_) => InputSearchProvider()),
-                ],
-                child: FutureBuilder(
-                  future: authServices.readToken("auth-token"),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Text("Sin datos...");
-                    }
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 50),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldo por Bodega",
-                            onPress: () {
-                              _displayModal(
-                                  context,
-                                  "Consultar Saldo por Bodega",
-                                  snapshot.data!,
-                                  "bodega");
-                            }),
-                        const SizedBox(height: 30),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldo por su Código",
-                            onPress: () {
-                              _displayModal(
-                                  context,
-                                  "Consultar Saldo por su Código",
-                                  snapshot.data!,
-                                  "codsaldo");
-                            }),
-                        const SizedBox(height: 30),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldo por Nombre del Producto",
-                            onPress: () {
-                              _displayModal(
-                                  context,
-                                  "Consultar Saldo por Nombre del Producto",
-                                  snapshot.data!,
-                                  "producto");
-                            }),
-                        const SizedBox(height: 30),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldo por Linea",
-                            onPress: () {
-                              _displayModal(
-                                  context,
-                                  "Consultar Saldo por Línea",
-                                  snapshot.data!,
-                                  "linea");
-                            }),
-                        const SizedBox(height: 30),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldos en 0",
-                            onPress: () async {
-                              String data = "=", page = "0", size = "10";
-                              await balanceServices.getSaldo(
-                                  data, page, size, snapshot.data!);
-
-                              print(
-                                  "saldos: ${balanceServices.onDisplaySaldos}");
-                              Navigator.pushNamed(
-                                  context, CheckBalanceScreen.routerName,
-                                  arguments: ScreenArguments("saldo", data));
-                            }),
-                        const SizedBox(height: 30),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldos Positivos",
-                            onPress: () async {
-                              String data = ">", page = "0", size = "10";
-
-                              await balanceServices.getSaldo(
-                                  data, page, size, snapshot.data!);
-
-                              print(
-                                  "saldos: ${balanceServices.onDisplaySaldos}");
-                              Navigator.pushNamed(
-                                  context, CheckBalanceScreen.routerName,
-                                  arguments: ScreenArguments("saldo", data));
-                            }),
-                        const SizedBox(height: 30),
-                        _ButtonFilterBalance(
-                            routerName: routerName,
-                            label: "Consultar Saldos Negativos",
-                            onPress: () async {
-                              String data = "<", page = "0", size = "10";
-
-                              await balanceServices.getSaldo(
-                                  data, page, size, snapshot.data!);
-                              print(
-                                  "saldos: ${balanceServices.onDisplaySaldos}");
-                              Navigator.pushNamed(
-                                  context, CheckBalanceScreen.routerName,
-                                  arguments: ScreenArguments("saldo", data));
-                            }),
-                        const SizedBox(height: 50),
-                      ],
-                    );
-                  },
+        body: Background(
+          child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+              children: [
+                const SizedBox(
+                  height: 100,
                 ),
-              ),
-            ]));
+                MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                        create: (_) => InputSearchProvider()),
+                  ],
+                  child: FutureBuilder(
+                    future: authServices.readToken("auth-token"),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Text("Sin datos...");
+                      }
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 50),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldo por Bodega",
+                              onPress: () {
+                                _displayModal(
+                                    context,
+                                    "Consultar Saldo por Bodega",
+                                    snapshot.data!,
+                                    "bodega");
+                              }),
+                          const SizedBox(height: 30),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldo por su Código",
+                              onPress: () {
+                                _displayModal(
+                                    context,
+                                    "Consultar Saldo por su Código",
+                                    snapshot.data!,
+                                    "codsaldo");
+                              }),
+                          const SizedBox(height: 30),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldo por Nombre del Producto",
+                              onPress: () {
+                                _displayModal(
+                                    context,
+                                    "Consultar Saldo por Nombre del Producto",
+                                    snapshot.data!,
+                                    "producto");
+                              }),
+                          const SizedBox(height: 30),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldo por Linea",
+                              onPress: () {
+                                _displayModal(
+                                    context,
+                                    "Consultar Saldo por Línea",
+                                    snapshot.data!,
+                                    "linea");
+                              }),
+                          const SizedBox(height: 30),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldos en 0",
+                              onPress: () async {
+                                String data = "=", page = "0", size = "10";
+                                await balanceServices.getSaldo(
+                                    data, page, size, snapshot.data!);
+
+                                Navigator.pushNamed(
+                                    context, CheckBalanceScreen.routerName,
+                                    arguments: ScreenArguments("saldo", data));
+                              }),
+                          const SizedBox(height: 30),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldos Positivos",
+                              onPress: () async {
+                                String data = ">", page = "0", size = "10";
+
+                                await balanceServices.getSaldo(
+                                    data, page, size, snapshot.data!);
+
+                                Navigator.pushNamed(
+                                    context, CheckBalanceScreen.routerName,
+                                    arguments: ScreenArguments("saldo", data));
+                              }),
+                          const SizedBox(height: 30),
+                          _ButtonFilterBalance(
+                              routerName: routerName,
+                              label: "Consultar Saldos Negativos",
+                              onPress: () async {
+                                String data = "<", page = "0", size = "10";
+
+                                await balanceServices.getSaldo(
+                                    data, page, size, snapshot.data!);
+
+                                Navigator.pushNamed(
+                                    context, CheckBalanceScreen.routerName,
+                                    arguments: ScreenArguments("saldo", data));
+                              }),
+                          const SizedBox(height: 50),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ]),
+        ));
   }
 }
 
@@ -251,9 +254,6 @@ class _ModalFormState extends State<_ModalForm> {
                           listen: false);
                       String data = inputSearch.search, page = "0", size = "10";
 
-                      print(
-                          "data: $data endpoint: ${widget.endpoint}  token:${widget.token} ");
-
                       if (widget.endpoint == "bodega") {
                         await balanceServices.getBodega(
                             data, page, size, widget.token);
@@ -282,10 +282,6 @@ class _ModalFormState extends State<_ModalForm> {
                             context, CheckBalanceScreen.routerName,
                             arguments: ScreenArguments("producto", data));
                       }
-
-                      print("saldos: ${balanceServices.onDisplaySaldos}");
-                      // Navigator.pushNamed(
-                      //     context, CheckBalanceScreen.routerName);
                     },
                     child: const Text("Buscar"))
               ],

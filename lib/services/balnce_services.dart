@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 class BalanceServices extends ChangeNotifier {
   final String _baseUrl = "10.0.3.2:3001";
   List<Saldos> onDisplaySaldos = [];
+  List<SaldosWithGrupo> onDisplaySaldosWithGrupo = [];
   int totalData = 0, totalPages = 0;
 
   BalanceServices() {
@@ -111,6 +112,25 @@ class BalanceServices extends ChangeNotifier {
     totalData = getBalanceSaldoResponse.results.totalData;
     totalPages = getBalanceSaldoResponse.results.totalPages;
     onDisplaySaldos = getBalanceSaldoResponse.results.content;
+    notifyListeners();
+  }
+
+  getSaldosByFilters(
+      String query, String page, String size, String token) async {
+    final Map<String, String> queryParams = {"page": page, "size": size};
+
+    final Map<String, String> bodyQuery = {"query": query};
+
+    final url = Uri.http(_baseUrl, "/api/balance_filters", queryParams);
+
+    final resp = await http.post(url, body: bodyQuery, headers: {
+      "auth-token": token,
+    });
+
+    final getSaldoswithGrupo = GetFiltersResponse.fromJson(resp.body);
+    totalData = getSaldoswithGrupo.results.totalData;
+    totalPages = getSaldoswithGrupo.results.totalPages;
+    onDisplaySaldosWithGrupo = getSaldoswithGrupo.results.content;
     notifyListeners();
   }
 }

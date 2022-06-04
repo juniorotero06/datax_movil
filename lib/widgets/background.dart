@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class AuthBackground extends StatelessWidget {
+class Background extends StatelessWidget {
   final Widget child;
 
-  const AuthBackground({Key? key, required this.child}) : super(key: key);
+  const Background({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _HeaderIcon extends StatelessWidget {
             placeholder: NetworkImage(
                 "https://acegif.com/wp-content/uploads/loading-25.gif"),
             fit: BoxFit.contain,
-            height: 150,
+            height: 80,
           )),
     );
   }
@@ -48,14 +48,14 @@ class _PurpleBox extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      height: size.height * 0.4,
+      height: size.height,
       decoration: _purpleBackground(),
       child: Stack(
         children: [
           Positioned(
             child: _Bubble(),
-            top: 90,
-            left: 30,
+            top: 200,
+            left: 50,
           ),
           Positioned(
             child: _Bubble(),
@@ -77,6 +77,16 @@ class _PurpleBox extends StatelessWidget {
             bottom: 120,
             right: 20,
           ),
+          Positioned(
+            child: _Bubble(),
+            top: 500,
+            right: 100,
+          ),
+          Positioned(
+            child: _Bubble(),
+            top: 650,
+            left: 20,
+          ),
         ],
       ),
     );
@@ -85,8 +95,8 @@ class _PurpleBox extends StatelessWidget {
   BoxDecoration _purpleBackground() {
     return const BoxDecoration(
         gradient: LinearGradient(colors: [
-      Color.fromARGB(255, 199, 199, 255),
-      Color.fromARGB(255, 109, 90, 192)
+      Color.fromARGB(255, 204, 204, 255),
+      Color.fromARGB(255, 179, 173, 202)
     ]));
   }
 }

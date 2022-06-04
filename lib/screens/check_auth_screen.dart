@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/screens/screens.dart';
@@ -12,7 +11,6 @@ class CheckAuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthServices>(context, listen: false);
-    const storage = FlutterSecureStorage();
     return Scaffold(
       body: Center(
         child: FutureBuilder(

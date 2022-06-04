@@ -11,6 +11,8 @@ import '../widgets/alerts.dart';
 
 class AddUserScreen extends StatelessWidget {
   static const String rounterName = "add_user";
+
+  const AddUserScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

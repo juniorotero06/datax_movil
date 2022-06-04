@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 
 import 'package:datax_movil/screens/screens.dart';
 import 'package:datax_movil/services/services.dart';
-import 'package:datax_movil/shared_preferences/preferences.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 
 import '../themes/app_theme.dart';
+import '../widgets/modal_home.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routerName = "home";
@@ -22,6 +22,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text("Home")),
+          backgroundColor: AppTheme.primary,
           actions: [
             IconButton(
                 onPressed: () async {
@@ -33,59 +34,112 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         drawer: CustomDrawer(),
-        body: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FutureBuilder(
-                      future: authServices.readToken("fullName"),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Text("Sin datos...");
-                        }
-                        return Text("Bienvenido ${snapshot.data}");
-                      }),
-                  FutureBuilder(
-                      future: authServices.readToken("codLicense"),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Text("Sin datos...");
-                        }
-                        return Text("Licencia: ${snapshot.data}");
-                      }),
-                  MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      disabledColor: Colors.grey,
-                      elevation: 0,
-                      color: AppTheme.primary,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.attach_money,
-                              color: Colors.white, size: 30),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: const Text(
-                              "Consultar Saldo",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+        body: Background(
+          child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 120),
+                    FutureBuilder(
+                        future: authServices.readToken("fullName"),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Text("Sin datos...");
+                          }
+                          return Text("Bienvenido ${snapshot.data}",
+                              style: const TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold));
+                        }),
+                    const SizedBox(height: 20),
+                    FutureBuilder(
+                        future: authServices.readToken("codLicense"),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Text("Sin datos...");
+                          }
+                          return Text(
+                            "Licencia: ${snapshot.data}",
+                            style: const TextStyle(
+                              fontSize: 25,
                             ),
-                          ),
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, FilterBalanceScreen.routerName);
-                      }),
-                  const Divider(),
-                ],
-              ),
-            ]));
+                          );
+                        }),
+                    const SizedBox(height: 50),
+                    // MaterialButton(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(10)),
+                    //     disabledColor: Colors.grey,
+                    //     elevation: 0,
+                    //     color: AppTheme.primary,
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         const Icon(Icons.attach_money,
+                    //             color: Colors.white, size: 30),
+                    //         Container(
+                    //           padding: const EdgeInsets.symmetric(
+                    //               horizontal: 10, vertical: 20),
+                    //           child: const Text(
+                    //             "Consultar Saldo",
+                    //             style: TextStyle(
+                    //                 color: Colors.white, fontSize: 20),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     onPressed: () {
+                    //       Navigator.pushNamed(
+                    //           context, FilterBalanceScreen.routerName);
+                    //     }),
+                    // const SizedBox(
+                    //   height: 50,
+                    // ),
+                    FutureBuilder(
+                      future: authServices.readToken("auth-token"),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        final auxiliarServices =
+                            Provider.of<AuxiliarServices>(context);
+
+                        return MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            disabledColor: Colors.grey,
+                            elevation: 0,
+                            color: AppTheme.primary,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.attach_money,
+                                    color: Colors.white, size: 30),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 20),
+                                  child: const Text(
+                                    "Consultar Saldo",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onPressed: () async {
+                              await auxiliarServices.getBodegas(snapshot.data!);
+                              await auxiliarServices.getLineas(snapshot.data!);
+                              await auxiliarServices.getGrupos(snapshot.data!);
+                              displayModal(
+                                  context, "Consultar Saldo", snapshot.data!);
+                            });
+                      },
+                    ),
+                    const Divider(),
+                  ],
+                ),
+              ]),
+        ));
   }
 }
