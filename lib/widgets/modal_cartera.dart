@@ -77,24 +77,17 @@ class _ModalCartera extends StatelessWidget {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     return TextButton(
                         onPressed: () async {
-                          bool isCXPC;
-                          if (_.cXCEnabled && _.cxPEnabled) {
-                            isCXPC = true;
-                            print("isCXPC: $isCXPC");
-                          } else {
-                            isCXPC = false;
-                          }
-
-                          String query =
-                              queryCXX_CXP(_.cXCEnabled, _.cxPEnabled, isCXPC);
+                          _.isCXPCChange();
+                          String query = queryCXX_CXP(
+                              _.cXCEnabled, _.cxPEnabled, _.isCXPC);
                           print(query);
 
                           if (query != "") {
                             await balanceServices.getCartera(
-                                query, token, isCXPC);
+                                query, token, _.isCXPC);
 
                             await Get.to(const CheckCarteraScreen(),
-                                arguments: isCXPC);
+                                arguments: _.isCXPC);
                           }
                         },
                         child: const Text("Buscar"));

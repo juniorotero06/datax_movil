@@ -23,17 +23,20 @@ class CheckCarteraDetail extends StatelessWidget {
         title: const Center(child: Text("Resultado de Consulta")),
       ),
       body: Background(
-          child: Column(
-        children: [
-          const SizedBox(height: 130),
-          if (dataContent.isEmpty)
-            const Text("No hay Saldos a mostrar",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-          if (dataContent.isNotEmpty)
-            _DetailsCarteraDataTable(dataContent: dataContent),
-          const SizedBox(height: 10),
-          _ButtomsPaginate()
-        ],
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 130),
+            if (dataContent.isEmpty)
+              const Text("No hay Saldos a mostrar",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            if (dataContent.isNotEmpty)
+              _DetailsCarteraDataTable(dataContent: dataContent),
+            const SizedBox(height: 10),
+            const _ButtomsPaginate(),
+            const SizedBox(height: 30),
+          ],
+        ),
       )),
     );
   }
@@ -69,7 +72,7 @@ class _DetailsCarteraDataTable extends StatelessWidget {
             rows: dataContent
                 .map((index) => DataRow(cells: [
                       DataCell(Center(child: Text(index.tercero ?? ""))),
-                      DataCell(Center(child: Text(index.terceroNom ?? ""))),
+                      DataCell(Text(index.terceroNom ?? "")),
                       DataCell(Center(child: Text(index.dcmnto ?? ""))),
                       DataCell(Center(child: Text(index.saldo.toString()))),
                       DataCell(Center(child: Text(index.vence.toString()))),
@@ -112,29 +115,33 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   onPressed: () async {
                     if (page >= 1) {
                       page--;
+                      print("Clase: ${_.clase}");
+
                       if (_.cXCEnabled) {
+                        print("Clase: ENTRE CXC");
                         String query =
-                            queryDetails_CXPC("saldo_cxc", _.tipo, page, size);
-                        print(query);
+                            queryDetails_CXPC("CXC", _.tipo, page, size);
+
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
+                        print("Clase: ENTRE CXP");
                         String query =
-                            queryDetails_CXPC("saldo_cxp", _.tipo, page, size);
-                        print(query);
+                            queryDetails_CXPC("CXP", _.tipo, page, size);
+
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
 
-                      if (_.cxPEnabled && _.cXCEnabled) {
+                      if (_.isCXPC) {
+                        print("Clase: ENTRE CXP y CXC");
                         String query =
                             queryDetails_CXPC(_.clase, _.tipo, page, size);
-                        print(query);
+
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
-
                       setState(() {});
                     }
                   },
@@ -149,23 +156,26 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   onPressed: () async {
                     if (page < balanceServices.totalPages) {
                       page++;
-
+                      print("Clase: ${_.clase}");
                       if (_.cXCEnabled) {
+                        print("Clase: ENTRE CXC");
                         String query =
-                            queryDetails_CXPC("saldo_cxc", _.tipo, page, size);
+                            queryDetails_CXPC("CXC", _.tipo, page, size);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
+                        print("Clase: ENTRE CXP");
                         String query =
-                            queryDetails_CXPC("saldo_cxp", _.tipo, page, size);
+                            queryDetails_CXPC("CXP", _.tipo, page, size);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
 
-                      if (_.cxPEnabled && _.cXCEnabled) {
+                      if (_.isCXPC) {
+                        print("Clase: ENTRE CXP y CXC");
                         String query =
                             queryDetails_CXPC(_.clase, _.tipo, page, size);
 

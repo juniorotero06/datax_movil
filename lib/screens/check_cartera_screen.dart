@@ -26,37 +26,41 @@ class CheckCarteraScreen extends StatelessWidget {
           child: GetBuilder<CheckCarteraController>(
         init: CheckCarteraController(),
         builder: (_) => Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 130),
-              if (!_.isCXPC) const _DataTableCartera(),
-              if (_.isCXPC) const _DataTableCarteraCXCP(),
-              const SizedBox(height: 30),
-              if (_.isCXPC)
-                MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    disabledColor: Colors.grey,
-                    elevation: 0,
-                    color: AppTheme.primary,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 20),
-                          child: const Text(
-                            "Generar Gráfica",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 130),
+                if (!_.isCXPC) const _DataTableCartera(),
+                if (_.isCXPC) const _DataTableCarteraCXCP(),
+                const SizedBox(height: 30),
+                if (_.isCXPC)
+                  MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      disabledColor: Colors.grey,
+                      elevation: 0,
+                      color: AppTheme.primary,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 20),
+                            child: const Text(
+                              "Generar Gráfica",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
                           ),
-                        ),
-                        const Icon(Icons.auto_graph,
-                            color: Colors.white, size: 30),
-                      ],
-                    ),
-                    onPressed: () {})
-            ],
+                          const Icon(Icons.auto_graph,
+                              color: Colors.white, size: 30),
+                        ],
+                      ),
+                      onPressed: () {}),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       )),
@@ -105,6 +109,8 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                               icon: const Icon(Icons.search),
                               onPressed: () async {
                                 _.clase = index.clase!;
+                                _.tipo = index.tipo!;
+                                _.limpiar();
                                 String query = queryDetails_CXPC(
                                     index.clase!, index.tipo!, 0, 10);
                                 print(query);
