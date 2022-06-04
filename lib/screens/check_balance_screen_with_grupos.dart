@@ -40,25 +40,28 @@ class CheckBalanceScreenWithGrupos extends StatelessWidget {
           title: const Center(child: Text("Resultado de Consulta")),
         ),
         body: Background(
-          child: Column(
-            children: [
-              const SizedBox(height: 130),
-              if (dataContent.isEmpty)
-                const Text("No hay Saldos a mostrar",
-                    style:
-                        TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-              if (dataContent.isNotEmpty)
-                _SaldosDataTable(dataContent: dataContent),
-              const SizedBox(height: 10),
-              _ButtomsPaginate(
-                bodega: args.bodega,
-                codProducto: args.codProducto,
-                grupo: args.grupo,
-                linea: args.linea,
-                producto: args.producto,
-                saldo: args.saldo,
-              )
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 130),
+                if (dataContent.isEmpty)
+                  const Text("No hay Saldos a mostrar",
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                if (dataContent.isNotEmpty)
+                  _SaldosDataTable(dataContent: dataContent),
+                const SizedBox(height: 10),
+                _ButtomsPaginate(
+                  bodega: args.bodega,
+                  codProducto: args.codProducto,
+                  grupo: args.grupo,
+                  linea: args.linea,
+                  producto: args.producto,
+                  saldo: args.saldo,
+                ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ));
   }
