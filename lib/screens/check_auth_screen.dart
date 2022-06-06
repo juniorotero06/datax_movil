@@ -1,4 +1,7 @@
+import 'package:datax_movil/controllers/controllers.dart';
+import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/screens/screens.dart';
@@ -17,7 +20,9 @@ class CheckAuthScreen extends StatelessWidget {
             future: authService.readToken("auth-token"),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (!snapshot.hasData) {
-                return const Text("Validando...");
+                return const Scaffold(
+                    body: Background(
+                        child: CircularProgressIndicator.adaptive()));
               }
 
               if (snapshot.data == '') {
@@ -39,9 +44,16 @@ class CheckAuthScreen extends StatelessWidget {
                 });
               }
 
-              //storage.read(key: 'auth-token');
-
-              return Container();
+              return GetBuilder<AuthController>(
+                init: AuthController(),
+                builder: (_) {
+                  _.token = snapshot.data!;
+                  print("TOKEN: ${_.token}");
+                  return const Scaffold(
+                      body: Background(
+                          child: CircularProgressIndicator.adaptive()));
+                },
+              );
             }),
       ),
     );
