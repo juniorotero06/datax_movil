@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AuxiliarServices extends ChangeNotifier {
-  final String _baseUrl = "10.0.3.2:3001";
+  //final String _baseUrl = "10.0.3.2:3001";
+  final String _baseUrl = "api-atxel.herokuapp.com";
   List<Bodegas> onDisplayBodegas = [];
   List<Lineas> onDisplayLineas = [];
   List<Grupos> onDisplayGrupo = [];
@@ -14,7 +15,7 @@ class AuxiliarServices extends ChangeNotifier {
   }
 
   getBodegas(String token) async {
-    final url = Uri.http(_baseUrl, "/api/aux/bodegas");
+    final url = Uri.https(_baseUrl, "/api/aux/bodegas");
 
     final resp = await http.get(url, headers: {
       "auth-token": token,
@@ -26,7 +27,7 @@ class AuxiliarServices extends ChangeNotifier {
   }
 
   getLineas(String token) async {
-    final url = Uri.http(_baseUrl, "/api/aux/lineas");
+    final url = Uri.https(_baseUrl, "/api/aux/lineas");
 
     final resp = await http.get(url, headers: {
       "auth-token": token,
@@ -38,7 +39,7 @@ class AuxiliarServices extends ChangeNotifier {
   }
 
   getGrupos(String token) async {
-    final url = Uri.http(_baseUrl, "/api/aux/grupo");
+    final url = Uri.https(_baseUrl, "/api/aux/grupo");
 
     final resp = await http.get(url, headers: {
       "auth-token": token,

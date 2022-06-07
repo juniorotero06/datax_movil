@@ -50,9 +50,14 @@ class HomeScreen extends StatelessWidget {
                           if (!snapshot.hasData) {
                             return const Text("Sin datos...");
                           }
-                          return Text("Bienvenido ${snapshot.data}",
-                              style: const TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold));
+                          return Center(
+                            child: Text("Bienvenido ${snapshot.data}",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          );
                         }),
                     const SizedBox(height: 20),
                     FutureBuilder(
@@ -62,10 +67,15 @@ class HomeScreen extends StatelessWidget {
                           if (!snapshot.hasData) {
                             return const Text("Sin datos...");
                           }
-                          return Text(
-                            "Licencia: ${snapshot.data}",
-                            style: const TextStyle(
-                              fontSize: 25,
+                          return Center(
+                            child: FittedBox(
+                              child: Text(
+                                "Licencia: ${snapshot.data}",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                ),
+                              ),
                             ),
                           );
                         }),
@@ -114,16 +124,18 @@ class HomeScreen extends StatelessWidget {
                             color: AppTheme.primary,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.attach_money,
+                                const Icon(Icons.factory_outlined,
                                     color: Colors.white, size: 30),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 20),
-                                  child: const Text(
-                                    "Consultar Saldo",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                  child: const FittedBox(
+                                    child: Text(
+                                      "Consultar Inventario",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -132,8 +144,8 @@ class HomeScreen extends StatelessWidget {
                               await auxiliarServices.getBodegas(snapshot.data!);
                               await auxiliarServices.getLineas(snapshot.data!);
                               await auxiliarServices.getGrupos(snapshot.data!);
-                              displayModal(
-                                  context, "Consultar Saldo", snapshot.data!);
+                              displayModal(context, "Consultar Inventario",
+                                  snapshot.data!);
                             });
                       },
                     ),
@@ -142,9 +154,6 @@ class HomeScreen extends StatelessWidget {
                       future: authServices.readToken("auth-token"),
                       builder: (BuildContext context,
                           AsyncSnapshot<String> snapshot) {
-                        final auxiliarServices =
-                            Provider.of<AuxiliarServices>(context);
-
                         return MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
@@ -159,10 +168,11 @@ class HomeScreen extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 20),
-                                  child: const Text(
-                                    "Consultar Cartera",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                  child: const FittedBox(
+                                    child: Text(
+                                      "Consultar Cartera",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ],

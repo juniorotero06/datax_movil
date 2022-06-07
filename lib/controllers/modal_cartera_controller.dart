@@ -30,4 +30,10 @@ class ModalCarteraController extends GetxController {
     cxPEnabled = false;
     update();
   }
+
+  void selectAllOptions() {
+    cXCEnabled = true;
+    cxPEnabled = true;
+    update();
+  }
 }

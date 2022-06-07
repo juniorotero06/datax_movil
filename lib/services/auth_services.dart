@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 
 class AuthServices extends ChangeNotifier {
   //final String _url = "http://localhost:3001/api/auth/user_login";
-  final String _baseUrl = "10.0.3.2:3001";
-
+  //final String _baseUrl = "10.0.3.2:3001";
+  final String _baseUrl = "api-atxel.herokuapp.com";
   final storage = const FlutterSecureStorage();
 
   Future<String?> loginUser(String email, String password) async {
@@ -16,7 +16,7 @@ class AuthServices extends ChangeNotifier {
       "password": password
     };
 
-    final url = Uri.http(_baseUrl, "/api/auth/user_login");
+    final url = Uri.https(_baseUrl, "/api/auth/user_login");
     //final url = Uri.https(_baseUrl, "/api/auth/user_login");
 
     final resp = await http.post(url, body: authData);
@@ -60,7 +60,7 @@ class AuthServices extends ChangeNotifier {
       "rol": rol
     };
 
-    final url = Uri.http(_baseUrl, "/api/auth/regiter_data");
+    final url = Uri.https(_baseUrl, "/api/auth/regiter_data");
 
     final resp = await http.post(url, body: registerInfo);
     final Map<String, dynamic> decodeResp = json.decode(resp.body);
@@ -107,7 +107,7 @@ class AuthServices extends ChangeNotifier {
       "rol": rol
     };
 
-    final url = Uri.http(_baseUrl, "/api/auth/license_data");
+    final url = Uri.https(_baseUrl, "/api/auth/license_data");
 
     final resp = await http.post(url, body: licenseInfo);
 
@@ -139,7 +139,7 @@ class AuthServices extends ChangeNotifier {
       "rol": rol
     };
 
-    final url = Uri.http(_baseUrl, "/api/admin_regiter_user");
+    final url = Uri.https(_baseUrl, "/api/admin_regiter_user");
 
     final resp = await http.post(url, body: registerInfo, headers: {
       "auth-token": token,
@@ -161,7 +161,7 @@ class AuthServices extends ChangeNotifier {
       "newPassword": newPassword,
     };
 
-    final url = Uri.http(_baseUrl, "/api/admin/change_pass");
+    final url = Uri.https(_baseUrl, "/api/admin/change_pass");
 
     final resp = await http.post(url, body: changePassInfo, headers: {
       "Content-Type": "application/json",

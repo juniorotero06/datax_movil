@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class BalanceServices extends ChangeNotifier {
-  final String _baseUrl = "10.0.3.2:3001";
+  //final String _baseUrl = "10.0.3.2:3001";
+  final String _baseUrl = "api-atxel.herokuapp.com";
   List<Saldos> onDisplaySaldos = [];
   List<SaldosWithGrupo> onDisplaySaldosWithGrupo = [];
   List<Cartera> onDisplayCartera = [];
@@ -28,7 +29,7 @@ class BalanceServices extends ChangeNotifier {
     final Map<String, dynamic> bodyInfo = {"bodega": bodega};
 
     //final url = Uri.http(_baseUrl, "/api/balance_bodega?page=$page&size=$size");
-    final url = Uri.http(_baseUrl, "/api/balance_bodega", queryParams);
+    final url = Uri.https(_baseUrl, "/api/balance_bodega", queryParams);
 
     final resp = await http.post(url, body: bodyInfo, headers: {
       "auth-token": token,
@@ -48,7 +49,7 @@ class BalanceServices extends ChangeNotifier {
 
     final Map<String, String> bodyInfo = {"codSaldo": codSaldo};
 
-    final url = Uri.http(_baseUrl, "/api/balance_codsaldo", queryParams);
+    final url = Uri.https(_baseUrl, "/api/balance_codsaldo", queryParams);
 
     final resp = await http.post(url, body: bodyInfo, headers: {
       "auth-token": token,
@@ -68,7 +69,7 @@ class BalanceServices extends ChangeNotifier {
 
     final Map<String, String> bodyInfo = {"linea": linea};
 
-    final url = Uri.http(_baseUrl, "/api/balance_linea", queryParams);
+    final url = Uri.https(_baseUrl, "/api/balance_linea", queryParams);
 
     final resp = await http.post(url, body: bodyInfo, headers: {
       "auth-token": token,
@@ -87,7 +88,7 @@ class BalanceServices extends ChangeNotifier {
 
     final Map<String, String> bodyInfo = {"nomProducto": producto};
 
-    final url = Uri.http(_baseUrl, "/api/balance_producto", queryParams);
+    final url = Uri.https(_baseUrl, "/api/balance_producto", queryParams);
 
     final resp = await http.post(url, body: bodyInfo, headers: {
       "auth-token": token,
@@ -107,7 +108,7 @@ class BalanceServices extends ChangeNotifier {
 
     final Map<String, String> bodyInfo = {"operator": operador};
 
-    final url = Uri.http(_baseUrl, "/api/balance_saldo", queryParams);
+    final url = Uri.https(_baseUrl, "/api/balance_saldo", queryParams);
 
     final resp = await http.post(url, body: bodyInfo, headers: {
       "auth-token": token,
@@ -127,7 +128,7 @@ class BalanceServices extends ChangeNotifier {
 
     final Map<String, String> bodyQuery = {"query": query};
 
-    final url = Uri.http(_baseUrl, "/api/balance_filters", queryParams);
+    final url = Uri.https(_baseUrl, "/api/balance_filters", queryParams);
 
     final resp = await http.post(url, body: bodyQuery, headers: {
       "auth-token": token,
@@ -143,7 +144,7 @@ class BalanceServices extends ChangeNotifier {
   getCartera(String query, String token, bool isCXPX) async {
     final Map<String, String> bodyQuery = {"query": query};
 
-    final url = Uri.http(_baseUrl, "/api/cartera_cxc_cxp");
+    final url = Uri.https(_baseUrl, "/api/cartera_cxc_cxp");
 
     final resp = await http.post(url, body: bodyQuery, headers: {
       "auth-token": token,
@@ -166,7 +167,7 @@ class BalanceServices extends ChangeNotifier {
 
     final Map<String, String> bodyQuery = {"query": query};
 
-    final url = Uri.http(_baseUrl, "/api/detail_cartera", queryParams);
+    final url = Uri.https(_baseUrl, "/api/detail_cartera", queryParams);
 
     final resp = await http.post(url, body: bodyQuery, headers: {
       "auth-token": token,
