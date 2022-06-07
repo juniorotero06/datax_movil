@@ -194,7 +194,8 @@ class _RegisterFormState extends State<_RegisterForm> {
               const SizedBox(height: 30),
               CheckboxListTile(
                   activeColor: AppTheme.primary,
-                  title: const Text("¿No tiene su licencia registrada aun?"),
+                  title: const Text(
+                      "¿No tiene su licencia registrada en la aplicación aun?"),
                   value: _isRegisterLicense,
                   onChanged: (value) {
                     _isRegisterLicense = value ?? true;
@@ -221,9 +222,13 @@ class _RegisterFormState extends State<_RegisterForm> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 80, vertical: 15),
-                      child: Text(
-                        registerForm.isLoading ? "Espere..." : "Crear Usuario",
-                        style: const TextStyle(color: Colors.white),
+                      child: FittedBox(
+                        child: Text(
+                          registerForm.isLoading
+                              ? "Espere..."
+                              : "Crear Usuario",
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     onPressed: registerForm.isLoading

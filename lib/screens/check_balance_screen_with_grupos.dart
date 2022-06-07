@@ -77,33 +77,48 @@ class _SaldosDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          dataRowColor: MaterialStateColor.resolveWith(
-              (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
-          headingRowColor: MaterialStateColor.resolveWith(
-              (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
-          columnSpacing: 15,
-          columns: const [
-            DataColumn(label: Text("Código de Saldo")),
-            DataColumn(label: Text("Saldo Actual")),
-            DataColumn(label: Text("Nombre del Producto")),
-            DataColumn(label: Text("Nombre de Bodega")),
-            DataColumn(label: Text("Línea")),
-            DataColumn(label: Text("Grupo")),
-          ],
-          rows: dataContent
-              .map((index) => DataRow(cells: [
-                    DataCell(Center(child: Text(index.codSdo ?? ""))),
-                    DataCell(Center(child: Text(index.actualSdo.toString()))),
-                    DataCell(Text(index.descrip ?? "")),
-                    DataCell(Center(child: Text(index.desBod ?? ""))),
-                    DataCell(Center(child: Text(index.desLinea ?? ""))),
-                    DataCell(Text(index.descGru ?? "")),
-                  ]))
-              .toList(),
-        ));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            dataRowColor: MaterialStateColor.resolveWith(
+                (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
+            columnSpacing: 15,
+            columns: const [
+              DataColumn(
+                  label: Text("Código de Saldo", textAlign: TextAlign.center)),
+              DataColumn(
+                  label: Text("Saldo Actual", textAlign: TextAlign.center)),
+              DataColumn(label: Text("Nombre del Producto")),
+              DataColumn(
+                  label: Text("Nombre de Bodega", textAlign: TextAlign.center)),
+              DataColumn(label: Text("Línea", textAlign: TextAlign.center)),
+              DataColumn(label: Text("Grupo", textAlign: TextAlign.center)),
+            ],
+            rows: dataContent
+                .map((index) => DataRow(cells: [
+                      DataCell(Center(
+                          child: Text(index.codSdo ?? "Sin datos básicos",
+                              textAlign: TextAlign.center))),
+                      DataCell(Center(
+                          child: Text(index.actualSdo.toString(),
+                              textAlign: TextAlign.center))),
+                      DataCell(Text(index.descrip ?? "Sin datos básicos")),
+                      DataCell(Center(
+                          child: Text(index.desBod ?? "Sin datos básicos",
+                              textAlign: TextAlign.center))),
+                      DataCell(Center(
+                          child: Text(index.desLinea ?? "Sin datos básicos",
+                              textAlign: TextAlign.center))),
+                      DataCell(Text(index.descGru ?? "Sin datos básicos",
+                          textAlign: TextAlign.center)),
+                    ]))
+                .toList(),
+          )),
+    );
   }
 }
 

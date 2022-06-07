@@ -113,9 +113,11 @@ class _LoginForm extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 80, vertical: 15),
-                    child: Text(
-                      loginForm.isLoading ? "Espere..." : "Ingresar",
-                      style: const TextStyle(color: Colors.white),
+                    child: FittedBox(
+                      child: Text(
+                        loginForm.isLoading ? "Espere..." : "Ingresar",
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                   onPressed: loginForm.isLoading

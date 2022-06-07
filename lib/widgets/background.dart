@@ -35,7 +35,7 @@ class _HeaderIcon extends StatelessWidget {
             placeholder: NetworkImage(
                 "https://acegif.com/wp-content/uploads/loading-25.gif"),
             fit: BoxFit.contain,
-            height: 80,
+            height: 60,
           )),
     );
   }

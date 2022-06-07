@@ -52,35 +52,41 @@ class _DetailsCarteraDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Center(
-          child: DataTable(
-            dataRowColor: MaterialStateColor.resolveWith(
-                (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
-            headingRowColor: MaterialStateColor.resolveWith(
-                (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
-            columnSpacing: 15,
-            columns: const [
-              DataColumn(label: Text("Tercero")),
-              DataColumn(label: Text("Nombre")),
-              DataColumn(label: Text("Documento")),
-              DataColumn(label: Text("Saldo")),
-              DataColumn(label: Text("Vence")),
-              DataColumn(label: Text("Dias de Vencimiento")),
-            ],
-            rows: dataContent
-                .map((index) => DataRow(cells: [
-                      DataCell(Center(child: Text(index.tercero ?? ""))),
-                      DataCell(Text(index.terceroNom ?? "")),
-                      DataCell(Center(child: Text(index.dcmnto ?? ""))),
-                      DataCell(Center(child: Text(index.saldo.toString()))),
-                      DataCell(Center(child: Text(index.vence.toString()))),
-                      DataCell(Center(child: Text(index.diasVence.toString()))),
-                    ]))
-                .toList(),
-          ),
-        ));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Center(
+            child: DataTable(
+              dataRowColor: MaterialStateColor.resolveWith(
+                  (states) => const Color.fromRGBO(255, 255, 255, 0.4)),
+              headingRowColor: MaterialStateColor.resolveWith(
+                  (states) => const Color.fromRGBO(145, 145, 145, 0.3)),
+              columnSpacing: 15,
+              columns: const [
+                DataColumn(label: Center(child: Text("Tercero"))),
+                DataColumn(label: Center(child: Text("Nombre"))),
+                DataColumn(label: Center(child: Text("Documento"))),
+                DataColumn(label: Center(child: Text("Saldo"))),
+                DataColumn(label: Center(child: Text("Vence"))),
+                DataColumn(label: Center(child: Text("Dias de Vencimiento"))),
+              ],
+              rows: dataContent
+                  .map((index) => DataRow(cells: [
+                        DataCell(Center(
+                            child: Text(index.tercero ?? "Sin datos básicos"))),
+                        DataCell(Text(index.terceroNom ?? "Sin datos básicos")),
+                        DataCell(Center(
+                            child: Text(index.dcmnto ?? "Sin datos básicos"))),
+                        DataCell(Center(child: Text(index.saldo.toString()))),
+                        DataCell(Center(child: Text(index.vence.toString()))),
+                        DataCell(
+                            Center(child: Text(index.diasVence.toString()))),
+                      ]))
+                  .toList(),
+            ),
+          )),
+    );
   }
 }
 

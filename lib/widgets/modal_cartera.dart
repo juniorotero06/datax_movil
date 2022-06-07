@@ -60,39 +60,49 @@ class _ModalCartera extends StatelessWidget {
                   _.pressCheckCXP(value ?? false);
                   print("CXP: ${_.cxPEnabled}");
                 }),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancelar")),
+                Row(
+                  children: [
+                    TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancelar")),
+                    TextButton(
+                        onPressed: () {
+                          _.limpiar();
+                        },
+                        child: const Text("Limpiar")),
+                    FutureBuilder(
+                      future: authServices.readToken("auth-token"),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        return TextButton(
+                            onPressed: () async {
+                              _.isCXPCChange();
+                              String query = queryCXX_CXP(
+                                  _.cXCEnabled, _.cxPEnabled, _.isCXPC);
+                              print(query);
+
+                              if (query != "") {
+                                await balanceServices.getCartera(
+                                    query, token, _.isCXPC);
+
+                                await Get.to(const CheckCarteraScreen(),
+                                    arguments: _.isCXPC);
+                              }
+                            },
+                            child: const Text("Buscar"));
+                      },
+                    )
+                  ],
+                ),
                 TextButton(
                     onPressed: () {
-                      _.limpiar();
+                      _.selectAllOptions();
                     },
-                    child: const Text("Limpiar")),
-                FutureBuilder(
-                  future: authServices.readToken("auth-token"),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    return TextButton(
-                        onPressed: () async {
-                          _.isCXPCChange();
-                          String query = queryCXX_CXP(
-                              _.cXCEnabled, _.cxPEnabled, _.isCXPC);
-                          print(query);
-
-                          if (query != "") {
-                            await balanceServices.getCartera(
-                                query, token, _.isCXPC);
-
-                            await Get.to(const CheckCarteraScreen(),
-                                arguments: _.isCXPC);
-                          }
-                        },
-                        child: const Text("Buscar"));
-                  },
-                )
+                    child: const Text("Seleccionar Todas")),
               ],
             )
           ],

@@ -193,9 +193,11 @@ class LicenseForm extends StatelessWidget {
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                child: Text(
-                  licenseForm.isLoading ? "Espere..." : "Crear Usuario",
-                  style: const TextStyle(color: Colors.white),
+                child: FittedBox(
+                  child: Text(
+                    licenseForm.isLoading ? "Espere..." : "Crear Usuario",
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               onPressed: licenseForm.isLoading

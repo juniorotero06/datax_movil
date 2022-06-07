@@ -97,7 +97,7 @@ class _ModalFormState extends State<_ModalForm> {
                               decoration: InputDecorations.authInputDecoration(
                                   hint: "",
                                   label: "Codigo del Producto",
-                                  icon: Icons.search),
+                                  icon: Icons.password_outlined),
                               onChanged: (value) {
                                 _.codProducto = value;
                               },
@@ -132,7 +132,7 @@ class _ModalFormState extends State<_ModalForm> {
                               decoration: InputDecorations.authInputDecoration(
                                   hint: "",
                                   label: "Nombre de Producto",
-                                  icon: Icons.search),
+                                  icon: Icons.password_outlined),
                               onChanged: (value) {
                                 //inputSearch.producto = value;
                                 _.producto = value;
