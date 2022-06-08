@@ -1,7 +1,8 @@
-import 'package:datax_movil/main.dart' show ScreenArguments;
-import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:datax_movil/main.dart' show ScreenArguments;
+import 'package:datax_movil/widgets/widgets.dart';
 
 import '../provider/input_search.dart';
 import '../themes/app_theme.dart';

@@ -87,6 +87,7 @@ String querySQL(String codProducto, String producto, String bodega,
   return "$query ORDER BY b.cod_sdo ASC LIMIT $size OFFSET ${page * size}";
 }
 
+//?Resumen Cuentas por pagar y cuentas por cobrar
 String queryCXX_CXP(bool checkCXC, bool checkCXP, bool isCXPC) {
   if (checkCXC && !checkCXP && !isCXPC) {
     return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120";
