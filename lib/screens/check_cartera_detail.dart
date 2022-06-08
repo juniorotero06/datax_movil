@@ -17,26 +17,86 @@ class CheckCarteraDetail extends StatelessWidget {
     final balanceServices = Provider.of<BalanceServices>(context);
     final List<DetailsCartera> dataContent =
         balanceServices.onDisplayDetailsCartera;
+    List<Cartera> listCarteraCXC = balanceServices.onDisplayCartera;
+    double totalCarteraCXC = 0;
+    List<Cartera> listCarteraCXP = balanceServices.onDisplayCartera;
+    double totalcarteraCXP = 0;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Center(child: Text("Resultado de Consulta")),
+        title: const Center(child: Text("Resultado de Consulta de Cartera")),
       ),
       body: Background(
           child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 130),
-            if (dataContent.isEmpty)
-              const Text("No hay Saldos a mostrar",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-            if (dataContent.isNotEmpty)
-              _DetailsCarteraDataTable(dataContent: dataContent),
-            const SizedBox(height: 10),
-            const _ButtomsPaginate(),
-            const SizedBox(height: 30),
-          ],
-        ),
+        child: GetBuilder<ModalCarteraController>(
+            init: ModalCarteraController(),
+            builder: (_) {
+              if (_.cXCEnabled && !_.isCXPC) {
+                for (int i = 0; i < listCarteraCXC.length; i++) {
+                  totalCarteraCXC =
+                      totalCarteraCXC + listCarteraCXC[i].vrSaldo!.toDouble();
+                }
+              }
+              if (_.cxPEnabled && !_.isCXPC) {
+                for (int i = 0; i < listCarteraCXP.length; i++) {
+                  totalcarteraCXP =
+                      totalcarteraCXP + listCarteraCXP[i].vrSaldo!.toDouble();
+                }
+              }
+
+              if (_.isCXPC) {
+                for (int i = 0; i < listCarteraCXC.length; i++) {
+                  totalCarteraCXC =
+                      totalCarteraCXC + listCarteraCXC[i].vrSaldo!.toDouble();
+                }
+                for (int i = 0; i < listCarteraCXP.length; i++) {
+                  totalcarteraCXP =
+                      totalcarteraCXP + listCarteraCXP[i].vrSaldo!.toDouble();
+                }
+              }
+              return Column(
+                children: [
+                  const SizedBox(height: 130),
+                  if (dataContent.isEmpty)
+                    const Text("No hay Saldos a mostrar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
+                  if (!_.isCXPC)
+                    Text("Cartera ${_.tipo}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
+                  if (_.isCXPC)
+                    Text("Cartera ${_.clase} ${_.tipo}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
+                  if (_.cXCEnabled && !_.isCXPC) const SizedBox(height: 30),
+                  if (_.cXCEnabled && !_.isCXPC)
+                    Center(
+                        child: Text(
+                            "Total Saldo de Cartera CXC: ${totalCarteraCXC.toStringAsFixed(0)}",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold))),
+                  if (_.cxPEnabled && !_.isCXPC) const SizedBox(height: 30),
+                  if (_.cxPEnabled && !_.isCXPC)
+                    Center(
+                        child: Text(
+                            "Total Saldo de Cartera CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold))),
+                  const SizedBox(height: 30),
+                  if (dataContent.isNotEmpty)
+                    _DetailsCarteraDataTable(dataContent: dataContent),
+                  const SizedBox(height: 10),
+                  const _ButtomsPaginate(),
+                  const SizedBox(height: 30),
+                ],
+              );
+            }),
       )),
     );
   }
@@ -78,8 +138,11 @@ class _DetailsCarteraDataTable extends StatelessWidget {
                         DataCell(Text(index.terceroNom ?? "Sin datos básicos")),
                         DataCell(Center(
                             child: Text(index.dcmnto ?? "Sin datos básicos"))),
-                        DataCell(Center(child: Text(index.saldo.toString()))),
-                        DataCell(Center(child: Text(index.vence.toString()))),
+                        DataCell(Center(
+                            child: Text(index.saldo!.toStringAsFixed(0)))),
+                        DataCell(Center(
+                            child:
+                                Text(index.vence.toString().substring(0, 10)))),
                         DataCell(
                             Center(child: Text(index.diasVence.toString()))),
                       ]))

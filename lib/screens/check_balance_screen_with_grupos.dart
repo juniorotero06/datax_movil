@@ -37,7 +37,8 @@ class CheckBalanceScreenWithGrupos extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: AppTheme.primary,
-          title: const Center(child: Text("Resultado de Consulta")),
+          title:
+              const Center(child: Text("Resultado de Consulta de Inventario")),
         ),
         body: Background(
           child: SingleChildScrollView(

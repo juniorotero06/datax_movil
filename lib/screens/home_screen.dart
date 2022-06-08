@@ -1,8 +1,8 @@
-import 'package:datax_movil/widgets/modal_cartera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
+import 'package:datax_movil/widgets/modal_cartera.dart';
 import 'package:datax_movil/screens/screens.dart';
 import 'package:datax_movil/services/services.dart';
 import 'package:datax_movil/widgets/widgets.dart';
@@ -80,35 +80,6 @@ class HomeScreen extends StatelessWidget {
                           );
                         }),
                     const SizedBox(height: 50),
-                    // MaterialButton(
-                    //     shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(10)),
-                    //     disabledColor: Colors.grey,
-                    //     elevation: 0,
-                    //     color: AppTheme.primary,
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         const Icon(Icons.attach_money,
-                    //             color: Colors.white, size: 30),
-                    //         Container(
-                    //           padding: const EdgeInsets.symmetric(
-                    //               horizontal: 10, vertical: 20),
-                    //           child: const Text(
-                    //             "Consultar Saldo",
-                    //             style: TextStyle(
-                    //                 color: Colors.white, fontSize: 20),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     onPressed: () {
-                    //       Navigator.pushNamed(
-                    //           context, FilterBalanceScreen.routerName);
-                    //     }),
-                    // const SizedBox(
-                    //   height: 50,
-                    // ),
                     FutureBuilder(
                       future: authServices.readToken("auth-token"),
                       builder: (BuildContext context,
@@ -162,6 +133,7 @@ class HomeScreen extends StatelessWidget {
                             color: AppTheme.primary,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.attach_money,
                                     color: Colors.white, size: 30),

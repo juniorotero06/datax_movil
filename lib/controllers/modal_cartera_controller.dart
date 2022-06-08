@@ -6,6 +6,7 @@ class ModalCarteraController extends GetxController {
   String tipo = "";
   String clase = "";
   late bool isCXPC;
+
   void isCXPCChange() {
     if (cXCEnabled && cxPEnabled) {
       isCXPC = true;
@@ -13,6 +14,7 @@ class ModalCarteraController extends GetxController {
     } else {
       isCXPC = false;
     }
+    update();
   }
 
   void pressCheckCXC(bool value) {
