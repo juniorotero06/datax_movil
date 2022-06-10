@@ -1,5 +1,3 @@
-import 'package:datax_movil/models/models.dart';
-import 'package:datax_movil/widgets/modal_home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
