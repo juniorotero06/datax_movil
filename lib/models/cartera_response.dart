@@ -39,13 +39,13 @@ class Cartera {
 
   String? tipo;
   int? documentos;
-  double? vrSaldo;
+  dynamic vrSaldo;
 
   factory Cartera.fromJson(String str) => Cartera.fromMap(json.decode(str));
 
   factory Cartera.fromMap(Map<String, dynamic> json) => Cartera(
         tipo: json["TIPO"],
         documentos: json["Documentos"],
-        vrSaldo: json["vr_saldo"].toDouble(),
+        vrSaldo: json["vr_saldo"],
       );
 }

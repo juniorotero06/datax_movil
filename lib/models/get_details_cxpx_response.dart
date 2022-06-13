@@ -47,6 +47,8 @@ class DetailsCartera {
     this.saldo,
     this.vence,
     this.diasVence,
+    this.cuenta,
+    this.cuentaNom,
   });
 
   String? tercero;
@@ -55,16 +57,19 @@ class DetailsCartera {
   double? saldo;
   DateTime? vence;
   int? diasVence;
+  String? cuenta;
+  String? cuentaNom;
 
   factory DetailsCartera.fromJson(String str) =>
       DetailsCartera.fromMap(json.decode(str));
 
   factory DetailsCartera.fromMap(Map<String, dynamic> json) => DetailsCartera(
-        tercero: json["tercero"],
-        terceroNom: json["tercero_nom"],
-        dcmnto: json["dcmnto"],
-        saldo: json["saldo"].toDouble(),
-        vence: DateTime.parse(json["vence"]),
-        diasVence: json["DIAS_VENCE"],
-      );
+      tercero: json["tercero"],
+      terceroNom: json["tercero_nom"],
+      dcmnto: json["dcmnto"],
+      saldo: json["saldo"].toDouble(),
+      vence: DateTime.parse(json["vence"]),
+      diasVence: json["DIAS_VENCE"],
+      cuenta: json["cuenta"],
+      cuentaNom: json["cuenta_nom"]);
 }

@@ -238,7 +238,8 @@ class _ModalCartera extends StatelessWidget {
                                       await balanceServices.getCartera(
                                           query, token, _.isCXPC);
 
-                                      await Get.to(const CheckCarteraScreen(),
+                                      await Get.to(
+                                          () => const CheckCarteraScreen(),
                                           arguments: _.isCXPC);
                                     }
                                   },

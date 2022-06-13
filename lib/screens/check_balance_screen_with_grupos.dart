@@ -1,6 +1,7 @@
 import 'package:datax_movil/themes/app_theme.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/query_sql.dart';
@@ -105,7 +106,11 @@ class _SaldosDataTable extends StatelessWidget {
                           child: Text(index.codSdo ?? "Sin datos básicos",
                               textAlign: TextAlign.center))),
                       DataCell(Center(
-                          child: Text(index.actualSdo.toString(),
+                          child: Text(
+                              NumberFormat.currency(
+                                      locale: 'en_us', decimalDigits: 0)
+                                  .format(index.actualSdo)
+                                  .replaceAll('USD', ''),
                               textAlign: TextAlign.center))),
                       DataCell(Text(index.descrip ?? "Sin datos básicos")),
                       DataCell(Center(

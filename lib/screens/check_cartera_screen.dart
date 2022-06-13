@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/controllers/controllers.dart';
@@ -88,7 +89,8 @@ class CheckCarteraScreen extends StatelessWidget {
                       if (__.cXCEnabled && !__.isCXPC)
                         Center(
                             child: Text(
-                                "Total Saldo de Cartera CXC: ${totalCarteraCXC.toStringAsFixed(0)}",
+                                "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalCarteraCXC)}"
+                                    .replaceAll('USD', ''),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -98,7 +100,8 @@ class CheckCarteraScreen extends StatelessWidget {
                       if (__.cxPEnabled && !__.isCXPC)
                         Center(
                             child: Text(
-                                "Total Saldo de Cartera CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                                "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalcarteraCXP)}"
+                                    .replaceAll('USD', ''),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -108,7 +111,7 @@ class CheckCarteraScreen extends StatelessWidget {
                       if (_.isCXPC)
                         Center(
                             child: Text(
-                                "Total CXC: ${totalCarteraCXC.toStringAsFixed(0)} Vs. Total CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                                "Total CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalCarteraCXC).replaceAll('USD', '')} Vs. Total CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalcarteraCXP).replaceAll('USD', '')}",
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -220,7 +223,11 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
                                     child: Text(
-                                        index.vrSaldo!.toStringAsFixed(0),
+                                        NumberFormat.currency(
+                                                locale: 'en_us',
+                                                decimalDigits: 0)
+                                            .format(index.vrSaldo!)
+                                            .replaceAll('USD', ''),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
                                   child: IconButton(
@@ -304,7 +311,11 @@ class _DataTableCartera extends StatelessWidget {
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
                                     child: Text(
-                                        index.vrSaldo!.toStringAsFixed(0),
+                                        NumberFormat.currency(
+                                                locale: 'en_us',
+                                                decimalDigits: 0)
+                                            .format(index.vrSaldo!)
+                                            .replaceAll('USD', ''),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
                                   child: IconButton(

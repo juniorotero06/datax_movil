@@ -2,6 +2,7 @@ import 'package:datax_movil/helpers/query_sql.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/controllers.dart';
@@ -76,7 +77,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cXCEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXC: ${totalCarteraCXC.toStringAsFixed(0)}",
+                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalCarteraCXC).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -84,7 +85,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cxPEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalcarteraCXP).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -130,6 +131,8 @@ class _DetailsCarteraDataTable extends StatelessWidget {
                 DataColumn(label: Center(child: Text("Saldo"))),
                 DataColumn(label: Center(child: Text("Vence"))),
                 DataColumn(label: Center(child: Text("Dias de Vencimiento"))),
+                DataColumn(label: Center(child: Text("Cuenta"))),
+                DataColumn(label: Center(child: Text("Nombre de Cuenta"))),
               ],
               rows: dataContent
                   .map((index) => DataRow(cells: [
@@ -139,12 +142,20 @@ class _DetailsCarteraDataTable extends StatelessWidget {
                         DataCell(Center(
                             child: Text(index.dcmnto ?? "Sin datos básicos"))),
                         DataCell(Center(
-                            child: Text(index.saldo!.toStringAsFixed(0)))),
+                            child: Text(NumberFormat.currency(
+                                    locale: 'en_us', decimalDigits: 0)
+                                .format(index.saldo!)
+                                .replaceAll('USD', '')))),
                         DataCell(Center(
                             child:
                                 Text(index.vence.toString().substring(0, 10)))),
                         DataCell(
                             Center(child: Text(index.diasVence.toString()))),
+                        DataCell(Center(
+                            child: Text(index.cuenta ?? "Sin datos básicos"))),
+                        DataCell(Center(
+                            child:
+                                Text(index.cuentaNom ?? "Sin datos básicos")))
                       ]))
                   .toList(),
             ),

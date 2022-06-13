@@ -101,10 +101,12 @@ String queryCXX_CXP(bool checkCXC, bool checkCXP, bool isCXPC) {
   return "";
 }
 
+//? Quey Detalles de cartera
+
 String queryDetails_CXPC(String clase, String tipo, int page, int size) {
   if (clase == "CXC") {
     String query =
-        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE FROM saldo_cxc WHERE";
+        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE, cuenta, cuenta_nom FROM saldo_cxc WHERE";
 
     if (tipo == "CORRIENTE") {
       query = "$query DATEDIFF(NOW(),vence)<=0";
@@ -128,7 +130,7 @@ String queryDetails_CXPC(String clase, String tipo, int page, int size) {
   }
   if (clase == "CXP") {
     String query =
-        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE FROM saldo_cxp WHERE";
+        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE, cuenta, cuenta_nom FROM saldo_cxp WHERE";
 
     if (tipo == "CORRIENTE") {
       query = "$query DATEDIFF(NOW(),vence)<=0";
