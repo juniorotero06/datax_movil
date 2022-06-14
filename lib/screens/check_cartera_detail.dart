@@ -18,10 +18,7 @@ class CheckCarteraDetail extends StatelessWidget {
     final balanceServices = Provider.of<BalanceServices>(context);
     final List<DetailsCartera> dataContent =
         balanceServices.onDisplayDetailsCartera;
-    List<Cartera> listCarteraCXC = balanceServices.onDisplayCartera;
-    double totalCarteraCXC = 0;
-    List<Cartera> listCarteraCXP = balanceServices.onDisplayCartera;
-    double totalcarteraCXP = 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -32,29 +29,6 @@ class CheckCarteraDetail extends StatelessWidget {
         child: GetBuilder<ModalCarteraController>(
             init: ModalCarteraController(),
             builder: (_) {
-              if (_.cXCEnabled && !_.isCXPC) {
-                for (int i = 0; i < listCarteraCXC.length; i++) {
-                  totalCarteraCXC =
-                      totalCarteraCXC + listCarteraCXC[i].vrSaldo!.toDouble();
-                }
-              }
-              if (_.cxPEnabled && !_.isCXPC) {
-                for (int i = 0; i < listCarteraCXP.length; i++) {
-                  totalcarteraCXP =
-                      totalcarteraCXP + listCarteraCXP[i].vrSaldo!.toDouble();
-                }
-              }
-
-              if (_.isCXPC) {
-                for (int i = 0; i < listCarteraCXC.length; i++) {
-                  totalCarteraCXC =
-                      totalCarteraCXC + listCarteraCXC[i].vrSaldo!.toDouble();
-                }
-                for (int i = 0; i < listCarteraCXP.length; i++) {
-                  totalcarteraCXP =
-                      totalcarteraCXP + listCarteraCXP[i].vrSaldo!.toDouble();
-                }
-              }
               return Column(
                 children: [
                   const SizedBox(height: 130),
@@ -77,7 +51,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cXCEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalCarteraCXC).replaceAll('USD', '')}",
+                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -85,7 +59,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cxPEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalcarteraCXP).replaceAll('USD', '')}",
+                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -195,10 +169,8 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   onPressed: () async {
                     if (page >= 1) {
                       page--;
-                      print("Clase: ${_.clase}");
 
                       if (_.cXCEnabled) {
-                        print("Clase: ENTRE CXC");
                         String query =
                             queryDetails_CXPC("CXC", _.tipo, page, size);
 
@@ -206,7 +178,6 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
-                        print("Clase: ENTRE CXP");
                         String query =
                             queryDetails_CXPC("CXP", _.tipo, page, size);
 
@@ -215,7 +186,6 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                       }
 
                       if (_.isCXPC) {
-                        print("Clase: ENTRE CXP y CXC");
                         String query =
                             queryDetails_CXPC(_.clase, _.tipo, page, size);
 
@@ -236,9 +206,8 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   onPressed: () async {
                     if (page < balanceServices.totalPages) {
                       page++;
-                      print("Clase: ${_.clase}");
+
                       if (_.cXCEnabled) {
-                        print("Clase: ENTRE CXC");
                         String query =
                             queryDetails_CXPC("CXC", _.tipo, page, size);
 
@@ -246,7 +215,6 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
-                        print("Clase: ENTRE CXP");
                         String query =
                             queryDetails_CXPC("CXP", _.tipo, page, size);
 
@@ -255,7 +223,6 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                       }
 
                       if (_.isCXPC) {
-                        print("Clase: ENTRE CXP y CXC");
                         String query =
                             queryDetails_CXPC(_.clase, _.tipo, page, size);
 

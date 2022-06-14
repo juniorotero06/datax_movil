@@ -59,12 +59,12 @@ class ModalHomeController extends GetxController {
   }
 
   void limpiar() {
-    this._bodega = "";
-    this._producto = "";
-    this._codProducto = "";
-    this._grupo = "";
-    this._linea = "";
-    this._saldo = "";
+    _bodega = "";
+    _producto = "";
+    _codProducto = "";
+    _grupo = "";
+    _linea = "";
+    _saldo = "";
 
     update();
   }

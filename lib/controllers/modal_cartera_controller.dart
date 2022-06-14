@@ -3,31 +3,19 @@ import 'package:flutter/material.dart';
 
 class ModalCarteraController extends GetxController {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String _codCuenta = "";
-  String _nomCuenta = "";
+
   String _codTercero = "";
   String _nomTercero = "";
   bool cXCEnabled = false;
   bool cxPEnabled = false;
   String tipo = "";
   String clase = "";
-  late bool isCXPC;
-  late FocusNode fucusTextFieldCodCuenta;
-  late FocusNode fucusTextFieldNomCuenta;
+  String cuenta = "";
+  dynamic vrSaldo;
+  bool isCXPC = false;
+
   late FocusNode fucusTextFieldCodTercero;
   late FocusNode fucusTextFieldNomTercero;
-
-  String get codCuenta => _codCuenta;
-  set codCuenta(String value) {
-    _codCuenta = value;
-    update();
-  }
-
-  String get nomCuenta => _nomCuenta;
-  set nomCuenta(String value) {
-    _nomCuenta = value;
-    update();
-  }
 
   String get codTercero => _codTercero;
   set codTercero(String value) {
@@ -61,16 +49,6 @@ class ModalCarteraController extends GetxController {
     update();
   }
 
-  void borrarCodCuenta() {
-    _codCuenta = "";
-    update();
-  }
-
-  void borrarNomCuenta() {
-    _nomCuenta = "";
-    update();
-  }
-
   void borrarCodTercero() {
     _codTercero = "";
     update();
@@ -84,8 +62,7 @@ class ModalCarteraController extends GetxController {
   void limpiar() {
     cXCEnabled = false;
     cxPEnabled = false;
-    _codCuenta = "";
-    _nomCuenta = "";
+
     _codTercero = "";
     _nomTercero = "";
     update();
@@ -99,8 +76,6 @@ class ModalCarteraController extends GetxController {
 
   @override
   void onInit() {
-    fucusTextFieldCodCuenta = FocusNode();
-    fucusTextFieldNomCuenta = FocusNode();
     fucusTextFieldCodTercero = FocusNode();
     fucusTextFieldNomTercero = FocusNode();
     super.onInit();
@@ -108,8 +83,6 @@ class ModalCarteraController extends GetxController {
 
   @override
   void onClose() {
-    fucusTextFieldCodCuenta.dispose();
-    fucusTextFieldNomCuenta.dispose();
     fucusTextFieldCodTercero.dispose();
     fucusTextFieldNomTercero.dispose();
     super.onClose();

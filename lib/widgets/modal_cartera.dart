@@ -32,11 +32,10 @@ class _ModalCartera extends StatelessWidget {
   Widget build(BuildContext context) {
     final balanceServices = Provider.of<BalanceServices>(context);
     final authServices = Provider.of<AuthServices>(context);
+    final auxiliarServices = Provider.of<AuxiliarServices>(context);
     return GetBuilder<ModalCarteraController>(
       init: ModalCarteraController(),
       builder: (_) {
-        final controllerCodCuenta = TextEditingController(text: _.codCuenta);
-        final controllerNomCuenta = TextEditingController(text: _.nomCuenta);
         final controllerCodTercero = TextEditingController(text: _.codTercero);
         final controllerNomTercero = TextEditingController(text: _.nomTercero);
         return AlertDialog(
@@ -70,75 +69,42 @@ class _ModalCartera extends StatelessWidget {
                         print("CXP: ${_.cxPEnabled}");
                       }),
                   const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            autocorrect: false,
-                            controller: controllerCodCuenta,
-                            focusNode: _.fucusTextFieldCodCuenta,
-                            autofocus: true,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecorations.authInputDecoration(
-                                hint: "",
-                                label: "Codigo de Cuenta",
-                                icon: Icons.password_outlined),
-                            onChanged: (value) {
-                              _.codCuenta = value;
-                            },
-                            validator: (value) {
-                              return (value != null)
-                                  ? null
-                                  : "El campo no puede estar vacío";
-                            }),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            _.borrarCodCuenta();
-                            FocusScope.of(context)
-                                .requestFocus(_.fucusTextFieldNomCuenta);
-                          },
-                          icon: const Icon(
-                            Icons.delete_forever,
-                            color: AppTheme.primary,
-                          ))
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            autocorrect: false,
-                            controller: controllerNomCuenta,
-                            focusNode: _.fucusTextFieldNomCuenta,
-                            autofocus: true,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecorations.authInputDecoration(
-                                hint: "",
-                                label: "Nombre de Cuenta",
-                                icon: Icons.password_outlined),
-                            onChanged: (value) {
-                              _.nomCuenta = value;
-                            },
-                            validator: (value) {
-                              return (value != null)
-                                  ? null
-                                  : "El campo no puede estar vacío";
-                            }),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            _.borrarNomCuenta();
-                            FocusScope.of(context)
-                                .requestFocus(_.fucusTextFieldCodTercero);
-                          },
-                          icon: const Icon(
-                            Icons.delete_forever,
-                            color: AppTheme.primary,
-                          ))
-                    ],
-                  ),
+                  if (_.cXCEnabled && !_.cxPEnabled && !_.isCXPC)
+                    DropdownButtonFormField<String>(
+                      items: auxiliarServices.onDisplayCuentasxCobrar.cxc
+                          .map(
+                            (index) => DropdownMenuItem(
+                                value: "${index.cuenta}||${index.cuentaNom}",
+                                child: Text(
+                                    "${index.cuenta}-${auxiliarServices.onDisplayCuentasxCobrar.clase}-${index.cuentaNom}")),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        _.cuenta = value ?? "";
+                      },
+                      decoration: InputDecorations.authInputDecoration(
+                          hint: "",
+                          label: "Cuentas Por Cobrar",
+                          icon: Icons.admin_panel_settings_outlined),
+                    ),
+                  if (_.cxPEnabled && !_.cXCEnabled && !_.isCXPC)
+                    DropdownButtonFormField<String>(
+                      items: auxiliarServices.onDisplayCuentasxPagar.cxp
+                          .map(
+                            (index) => DropdownMenuItem(
+                                value: "${index.cuenta}||${index.cuentaNom}",
+                                child: Text(
+                                    "${index.cuenta}-${auxiliarServices.onDisplayCuentasxPagar.clase}-${index.cuentaNom}")),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        _.cuenta = value ?? "";
+                      },
+                      decoration: InputDecorations.authInputDecoration(
+                          hint: "",
+                          label: "Cuentas Por Pagar",
+                          icon: Icons.admin_panel_settings_outlined),
+                    ),
                   const SizedBox(height: 10),
                   Row(
                     children: [

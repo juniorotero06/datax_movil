@@ -235,6 +235,7 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                     onPressed: () async {
                                       _.clase = index.clase!;
                                       _.tipo = index.tipo!;
+                                      _.vrSaldo = index.vrSaldo!;
                                       _.limpiar();
                                       String query = queryDetails_CXPC(
                                           index.clase!, index.tipo!, 0, 10);
@@ -323,6 +324,7 @@ class _DataTableCartera extends StatelessWidget {
                                     onPressed: () async {
                                       if (_.cXCEnabled) {
                                         _.tipo = index.tipo!;
+                                        _.vrSaldo = index.vrSaldo!;
                                         String query = queryDetails_CXPC(
                                             "CXC", index.tipo!, 0, 10);
                                         print(query);

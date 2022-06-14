@@ -44,25 +44,13 @@ class MyApp extends StatelessWidget {
               const ChangePasswordAdminScreen(),
           ChangeRoleToUserScreen.rounterName: (_) =>
               const ChangeRoleToUserScreen(),
-          CheckBalanceScreen.routerName: (_) => const CheckBalanceScreen(),
           CheckBalanceScreenWithGrupos.routerName: (_) =>
               const CheckBalanceScreenWithGrupos(),
-          FilterBalanceScreen.routerName: (_) => const FilterBalanceScreen()
         },
         theme: Provider.of<ThemeProvider>(context).currentTheme);
   }
 
   Route<dynamic>? _getRoute(RouteSettings settings) {
-    if (settings.name == CheckBalanceScreen.routerName) {
-      final args = settings.arguments as ScreenArguments;
-      return _buildRoute(
-          settings,
-          CheckBalanceScreen(
-            body: args.body,
-            endpoint: args.endpoint,
-          ));
-    }
-
     if (settings.name == CheckBalanceScreenWithGrupos.routerName) {
       final args = settings.arguments as ScreenArgumentsFilter;
       return _buildRoute(
