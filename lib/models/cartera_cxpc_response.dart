@@ -43,7 +43,7 @@ class CarteraCXPC {
   String? clase;
   String? tipo;
   int? documentos;
-  double? vrSaldo;
+  dynamic vrSaldo;
 
   factory CarteraCXPC.fromJson(String str) =>
       CarteraCXPC.fromMap(json.decode(str));
@@ -52,6 +52,6 @@ class CarteraCXPC {
         clase: json["CLASE"],
         tipo: json["TIPO"],
         documentos: json["Documentos"],
-        vrSaldo: json["vr_saldo"].toDouble(),
+        vrSaldo: json["vr_saldo"],
       );
 }

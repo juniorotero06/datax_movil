@@ -41,26 +41,32 @@ class CheckCarteraScreen extends StatelessWidget {
                 builder: (__) {
                   if (__.cXCEnabled && !__.isCXPC) {
                     for (int i = 0; i < listCarteraCXC.length; i++) {
-                      totalCarteraCXC = totalCarteraCXC +
-                          listCarteraCXC[i].vrSaldo!.toDouble();
+                      if (listCarteraCXC[i].vrSaldo != null) {
+                        totalCarteraCXC = totalCarteraCXC +
+                            listCarteraCXC[i].vrSaldo!.toDouble();
+                      }
                     }
                   }
                   if (__.cxPEnabled && !__.isCXPC) {
                     for (int i = 0; i < listCarteraCXP.length; i++) {
-                      totalcarteraCXP = totalcarteraCXP +
-                          listCarteraCXP[i].vrSaldo!.toDouble();
+                      if (listCarteraCXP[i].vrSaldo != null) {
+                        totalcarteraCXP = totalcarteraCXP +
+                            listCarteraCXP[i].vrSaldo.toDouble();
+                      }
                     }
                   }
 
                   if (__.isCXPC) {
                     for (int i = 0; i < listCarteraCXPC.length; i++) {
-                      if (listCarteraCXPC[i].clase == "CXC") {
-                        totalCarteraCXC =
-                            totalCarteraCXC + listCarteraCXPC[i].vrSaldo!;
+                      if (listCarteraCXPC[i].clase == "CXC" &&
+                          listCarteraCXPC[i].vrSaldo != null) {
+                        totalCarteraCXC = totalCarteraCXC +
+                            listCarteraCXPC[i].vrSaldo.toDouble();
                       }
-                      if (listCarteraCXPC[i].clase == "CXP") {
-                        totalcarteraCXP =
-                            totalcarteraCXP + listCarteraCXPC[i].vrSaldo!;
+                      if (listCarteraCXPC[i].clase == "CXP" &&
+                          listCarteraCXPC[i].vrSaldo != null) {
+                        totalcarteraCXP = totalcarteraCXP +
+                            listCarteraCXPC[i].vrSaldo.toDouble();
                       }
                     }
                   }
@@ -226,7 +232,7 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                         NumberFormat.currency(
                                                 locale: 'en_us',
                                                 decimalDigits: 0)
-                                            .format(index.vrSaldo!)
+                                            .format(index.vrSaldo ?? 0)
                                             .replaceAll('USD', ''),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
@@ -235,10 +241,16 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                     onPressed: () async {
                                       _.clase = index.clase!;
                                       _.tipo = index.tipo!;
-                                      _.vrSaldo = index.vrSaldo!;
+                                      _.vrSaldo = index.vrSaldo;
                                       _.limpiar();
                                       String query = queryDetails_CXPC(
-                                          index.clase!, index.tipo!, 0, 10);
+                                          index.clase!,
+                                          index.tipo!,
+                                          0,
+                                          10,
+                                          _.cuenta,
+                                          _.codTercero,
+                                          _.nomTercero);
                                       print(query);
                                       await balanceServices.getDetail_CxPC(
                                           query, "0", "10", snapshot.data!);
@@ -315,7 +327,7 @@ class _DataTableCartera extends StatelessWidget {
                                         NumberFormat.currency(
                                                 locale: 'en_us',
                                                 decimalDigits: 0)
-                                            .format(index.vrSaldo!)
+                                            .format(index.vrSaldo ?? 0)
                                             .replaceAll('USD', ''),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
@@ -324,9 +336,15 @@ class _DataTableCartera extends StatelessWidget {
                                     onPressed: () async {
                                       if (_.cXCEnabled) {
                                         _.tipo = index.tipo!;
-                                        _.vrSaldo = index.vrSaldo!;
+                                        _.vrSaldo = index.vrSaldo;
                                         String query = queryDetails_CXPC(
-                                            "CXC", index.tipo!, 0, 10);
+                                            "CXC",
+                                            index.tipo!,
+                                            0,
+                                            10,
+                                            _.cuenta,
+                                            _.codTercero,
+                                            _.nomTercero);
                                         print(query);
                                         await balanceServices.getDetail_CxPC(
                                             query, "0", "10", snapshot.data!);
@@ -336,7 +354,13 @@ class _DataTableCartera extends StatelessWidget {
                                       if (_.cxPEnabled) {
                                         _.tipo = index.tipo!;
                                         String query = queryDetails_CXPC(
-                                            "CXP", index.tipo!, 0, 10);
+                                            "CXP",
+                                            index.tipo!,
+                                            0,
+                                            10,
+                                            _.cuenta,
+                                            _.codTercero,
+                                            _.nomTercero);
                                         print(query);
                                         await balanceServices.getDetail_CxPC(
                                             query, "0", "10", snapshot.data!);

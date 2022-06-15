@@ -19,7 +19,7 @@ void displayModalCartera(BuildContext context, String title, String token) {
       });
 }
 
-class _ModalCartera extends StatelessWidget {
+class _ModalCartera extends StatefulWidget {
   final String title;
   final String token;
   const _ModalCartera({
@@ -27,6 +27,29 @@ class _ModalCartera extends StatelessWidget {
     required this.title,
     required this.token,
   }) : super(key: key);
+
+  @override
+  State<_ModalCartera> createState() => _ModalCarteraState();
+}
+
+class _ModalCarteraState extends State<_ModalCartera> {
+  late FocusNode fucusTextFieldCodTercero;
+  late FocusNode fucusTextFieldNomTercero;
+
+  @override
+  void initState() {
+    super.initState();
+    fucusTextFieldCodTercero = FocusNode();
+    fucusTextFieldNomTercero = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Limpia el nodo focus cuando se haga dispose al formulario
+    fucusTextFieldCodTercero.dispose();
+    fucusTextFieldNomTercero.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +65,7 @@ class _ModalCartera extends StatelessWidget {
           elevation: 5,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(10)),
-          title: Text(title),
+          title: Text(widget.title),
           content: Form(
             key: _.formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -112,7 +135,7 @@ class _ModalCartera extends StatelessWidget {
                         child: TextFormField(
                             autocorrect: false,
                             controller: controllerCodTercero,
-                            focusNode: _.fucusTextFieldCodTercero,
+                            focusNode: fucusTextFieldCodTercero,
                             autofocus: true,
                             keyboardType: TextInputType.text,
                             decoration: InputDecorations.authInputDecoration(
@@ -132,7 +155,8 @@ class _ModalCartera extends StatelessWidget {
                           onPressed: () {
                             _.borrarCodTercero();
                             FocusScope.of(context)
-                                .requestFocus(_.fucusTextFieldNomTercero);
+                                .requestFocus(fucusTextFieldNomTercero);
+                            controllerCodTercero.clear();
                           },
                           icon: const Icon(
                             Icons.delete_forever,
@@ -147,8 +171,7 @@ class _ModalCartera extends StatelessWidget {
                         child: TextFormField(
                             autocorrect: false,
                             controller: controllerNomTercero,
-                            focusNode: _.fucusTextFieldNomTercero,
-                            autofocus: true,
+                            focusNode: fucusTextFieldNomTercero,
                             keyboardType: TextInputType.text,
                             decoration: InputDecorations.authInputDecoration(
                                 hint: "",
@@ -166,6 +189,9 @@ class _ModalCartera extends StatelessWidget {
                       IconButton(
                           onPressed: () {
                             _.borrarNomTercero();
+                            FocusScope.of(context)
+                                .requestFocus(fucusTextFieldCodTercero);
+                            controllerNomTercero.clear();
                           },
                           icon: const Icon(
                             Icons.delete_forever,
@@ -197,12 +223,17 @@ class _ModalCartera extends StatelessWidget {
                                   onPressed: () async {
                                     _.isCXPCChange();
                                     String query = queryCXX_CXP(
-                                        _.cXCEnabled, _.cxPEnabled, _.isCXPC);
+                                        _.cXCEnabled,
+                                        _.cxPEnabled,
+                                        _.isCXPC,
+                                        _.cuenta,
+                                        _.codTercero,
+                                        _.nomTercero);
                                     print(query);
 
                                     if (query != "") {
                                       await balanceServices.getCartera(
-                                          query, token, _.isCXPC);
+                                          query, widget.token, _.isCXPC);
 
                                       await Get.to(
                                           () => const CheckCarteraScreen(),

@@ -51,7 +51,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cXCEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo).replaceAll('USD', '')}",
+                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo ?? 0).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -59,7 +59,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cxPEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo).replaceAll('USD', '')}",
+                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo ?? 0).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -171,23 +171,23 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                       page--;
 
                       if (_.cXCEnabled) {
-                        String query =
-                            queryDetails_CXPC("CXC", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXC", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
-                        String query =
-                            queryDetails_CXPC("CXP", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXP", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
 
                       if (_.isCXPC) {
-                        String query =
-                            queryDetails_CXPC(_.clase, _.tipo, page, size);
+                        String query = queryDetails_CXPC(_.clase, _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
@@ -208,23 +208,23 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                       page++;
 
                       if (_.cXCEnabled) {
-                        String query =
-                            queryDetails_CXPC("CXC", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXC", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
-                        String query =
-                            queryDetails_CXPC("CXP", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXP", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
 
                       if (_.isCXPC) {
-                        String query =
-                            queryDetails_CXPC(_.clase, _.tipo, page, size);
+                        String query = queryDetails_CXPC(_.clase, _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);

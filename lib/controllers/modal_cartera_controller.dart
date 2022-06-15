@@ -14,19 +14,17 @@ class ModalCarteraController extends GetxController {
   dynamic vrSaldo;
   bool isCXPC = false;
 
-  late FocusNode fucusTextFieldCodTercero;
-  late FocusNode fucusTextFieldNomTercero;
+  // late FocusNode fucusTextFieldCodTercero;
+  // late FocusNode fucusTextFieldNomTercero;
 
   String get codTercero => _codTercero;
   set codTercero(String value) {
     _codTercero = value;
-    update();
   }
 
   String get nomTercero => _nomTercero;
   set nomTercero(String value) {
     _nomTercero = value;
-    update();
   }
 
   void isCXPCChange() {
@@ -62,7 +60,7 @@ class ModalCarteraController extends GetxController {
   void limpiar() {
     cXCEnabled = false;
     cxPEnabled = false;
-
+    cuenta = "";
     _codTercero = "";
     _nomTercero = "";
     update();
@@ -74,17 +72,17 @@ class ModalCarteraController extends GetxController {
     update();
   }
 
-  @override
-  void onInit() {
-    fucusTextFieldCodTercero = FocusNode();
-    fucusTextFieldNomTercero = FocusNode();
-    super.onInit();
-  }
+  // @override
+  // void onInit() {
+  //   fucusTextFieldCodTercero = FocusNode();
+  //   fucusTextFieldNomTercero = FocusNode();
+  //   super.onInit();
+  // }
 
-  @override
-  void onClose() {
-    fucusTextFieldCodTercero.dispose();
-    fucusTextFieldNomTercero.dispose();
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   fucusTextFieldCodTercero.dispose();
+  //   fucusTextFieldNomTercero.dispose();
+  //   super.onClose();
+  // }
 }
