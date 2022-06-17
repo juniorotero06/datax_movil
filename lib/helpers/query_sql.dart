@@ -96,7 +96,7 @@ String queryCXX_CXP(bool checkCXC, bool checkCXP, bool isCXPC, String cuenta,
     if (cuenta != "" && codTercero == "" && nomTercero == "") {
       return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND cuenta_nom LIKE '%${desCuenta[1]}%'";
     }
-    if (codTercero != "") {
+    if (codTercero != "" && nomTercero == "") {
       if (cuenta != "") {
         return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%'";
       }
@@ -121,7 +121,7 @@ String queryCXX_CXP(bool checkCXC, bool checkCXP, bool isCXPC, String cuenta,
     if (cuenta != "" && codTercero == "" && nomTercero == "") {
       return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%'";
     }
-    if (codTercero != "") {
+    if (codTercero != "" && nomTercero == "") {
       if (cuenta != "") {
         return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE' %$codTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%'";
       }
@@ -160,39 +160,152 @@ String queryDetails_CXPC(String clase, String tipo, int page, int size,
 
     if (tipo == "CORRIENTE") {
       if (cuenta != "" && codTercero == "" && nomTercero == "") {
-        //
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
       }
-      if (codTercero != "") {
-        if (cuenta != "") {}
-        //
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
       }
       if (nomTercero != "") {
         if (cuenta != "" && codTercero == "") {
-          //
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
         }
         if (codTercero != "" && cuenta == "") {
-          //
+          query = "$query tercero LIKE '%$codTercero%' AND";
         }
         if (codTercero != "" && cuenta != "") {
-          //
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
         }
-        //
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
       }
       query = "$query DATEDIFF(NOW(),vence)<=0";
     }
     if (tipo == "1 A 30") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30";
     }
     if (tipo == "31 A 60") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60";
     }
     if (tipo == "61 A 90") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90";
     }
     if (tipo == "91 A 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120";
     }
     if (tipo == "MAYOR 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>120";
     }
     return "$query ORDER BY DIAS_VENCE DESC LIMIT $size OFFSET ${page * size}";
@@ -202,21 +315,153 @@ String queryDetails_CXPC(String clase, String tipo, int page, int size,
         "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE, cuenta, cuenta_nom FROM saldo_cxp WHERE";
 
     if (tipo == "CORRIENTE") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)<=0";
     }
     if (tipo == "1 A 30") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30";
     }
     if (tipo == "31 A 60") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60";
     }
     if (tipo == "61 A 90") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90";
     }
     if (tipo == "91 A 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120";
     }
     if (tipo == "MAYOR 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>120";
     }
     return "$query ORDER BY DIAS_VENCE DESC LIMIT $size OFFSET ${page * size}";

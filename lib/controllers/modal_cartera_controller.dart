@@ -14,9 +14,6 @@ class ModalCarteraController extends GetxController {
   dynamic vrSaldo;
   bool isCXPC = false;
 
-  // late FocusNode fucusTextFieldCodTercero;
-  // late FocusNode fucusTextFieldNomTercero;
-
   String get codTercero => _codTercero;
   set codTercero(String value) {
     _codTercero = value;
@@ -71,18 +68,4 @@ class ModalCarteraController extends GetxController {
     cxPEnabled = true;
     update();
   }
-
-  // @override
-  // void onInit() {
-  //   fucusTextFieldCodTercero = FocusNode();
-  //   fucusTextFieldNomTercero = FocusNode();
-  //   super.onInit();
-  // }
-
-  // @override
-  // void onClose() {
-  //   fucusTextFieldCodTercero.dispose();
-  //   fucusTextFieldNomTercero.dispose();
-  //   super.onClose();
-  // }
 }

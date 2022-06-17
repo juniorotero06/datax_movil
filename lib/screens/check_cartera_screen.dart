@@ -254,7 +254,8 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                       print(query);
                                       await balanceServices.getDetail_CxPC(
                                           query, "0", "10", snapshot.data!);
-                                      await Get.to(const CheckCarteraDetail());
+                                      await Get.to(
+                                          () => const CheckCarteraDetail());
                                     },
                                   ),
                                 ))
@@ -337,6 +338,7 @@ class _DataTableCartera extends StatelessWidget {
                                       if (_.cXCEnabled) {
                                         _.tipo = index.tipo!;
                                         _.vrSaldo = index.vrSaldo;
+                                        print("SALDO: ${index.vrSaldo}");
                                         String query = queryDetails_CXPC(
                                             "CXC",
                                             index.tipo!,
@@ -349,10 +351,11 @@ class _DataTableCartera extends StatelessWidget {
                                         await balanceServices.getDetail_CxPC(
                                             query, "0", "10", snapshot.data!);
                                         await Get.to(
-                                            const CheckCarteraDetail());
+                                            () => const CheckCarteraDetail());
                                       }
                                       if (_.cxPEnabled) {
                                         _.tipo = index.tipo!;
+                                        _.vrSaldo = index.vrSaldo;
                                         String query = queryDetails_CXPC(
                                             "CXP",
                                             index.tipo!,
@@ -365,7 +368,7 @@ class _DataTableCartera extends StatelessWidget {
                                         await balanceServices.getDetail_CxPC(
                                             query, "0", "10", snapshot.data!);
                                         await Get.to(
-                                            const CheckCarteraDetail());
+                                            () => const CheckCarteraDetail());
                                       }
                                     },
                                   ),

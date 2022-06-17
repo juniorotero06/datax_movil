@@ -79,6 +79,7 @@ class _ModalCarteraState extends State<_ModalCartera> {
                       value: _.cXCEnabled,
                       onChanged: (value) {
                         _.pressCheckCXC(value ?? false);
+                        _.isCXPCChange();
                         print("CXC: ${_.cXCEnabled}");
                       }),
                   const SizedBox(height: 10),
@@ -87,8 +88,8 @@ class _ModalCarteraState extends State<_ModalCartera> {
                       title: const Text("Cuentas por Pagar"),
                       value: _.cxPEnabled,
                       onChanged: (value) {
-                        //_.cxPEnabled = value ?? false;
                         _.pressCheckCXP(value ?? false);
+                        _.isCXPCChange();
                         print("CXP: ${_.cxPEnabled}");
                       }),
                   const SizedBox(height: 10),
@@ -128,77 +129,81 @@ class _ModalCarteraState extends State<_ModalCartera> {
                           label: "Cuentas Por Pagar",
                           icon: Icons.admin_panel_settings_outlined),
                     ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            autocorrect: false,
-                            controller: controllerCodTercero,
-                            focusNode: fucusTextFieldCodTercero,
-                            autofocus: true,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecorations.authInputDecoration(
-                                hint: "",
-                                label: "Codigo de Tercero",
-                                icon: Icons.password_outlined),
-                            onChanged: (value) {
-                              _.codTercero = value;
+                  if (_.cxPEnabled || _.cXCEnabled && _.isCXPC == false)
+                    const SizedBox(height: 10),
+                  if (_.cxPEnabled || _.cXCEnabled && _.isCXPC == false)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              autocorrect: false,
+                              controller: controllerCodTercero,
+                              focusNode: fucusTextFieldCodTercero,
+                              autofocus: true,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecorations.authInputDecoration(
+                                  hint: "",
+                                  label: "Codigo de Tercero",
+                                  icon: Icons.password_outlined),
+                              onChanged: (value) {
+                                _.codTercero = value;
+                              },
+                              validator: (value) {
+                                return (value != null)
+                                    ? null
+                                    : "El campo no puede estar vacío";
+                              }),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _.borrarCodTercero();
+                              FocusScope.of(context)
+                                  .requestFocus(fucusTextFieldNomTercero);
+                              controllerCodTercero.clear();
                             },
-                            validator: (value) {
-                              return (value != null)
-                                  ? null
-                                  : "El campo no puede estar vacío";
-                            }),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            _.borrarCodTercero();
-                            FocusScope.of(context)
-                                .requestFocus(fucusTextFieldNomTercero);
-                            controllerCodTercero.clear();
-                          },
-                          icon: const Icon(
-                            Icons.delete_forever,
-                            color: AppTheme.primary,
-                          ))
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            autocorrect: false,
-                            controller: controllerNomTercero,
-                            focusNode: fucusTextFieldNomTercero,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecorations.authInputDecoration(
-                                hint: "",
-                                label: "Nombre de Tercero",
-                                icon: Icons.password_outlined),
-                            onChanged: (value) {
-                              _.nomTercero = value;
+                            icon: const Icon(
+                              Icons.delete_forever,
+                              color: AppTheme.primary,
+                            ))
+                      ],
+                    ),
+                  if (_.cxPEnabled || _.cXCEnabled && _.isCXPC == false)
+                    const SizedBox(height: 10),
+                  if (_.cxPEnabled || _.cXCEnabled && _.isCXPC == false)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              autocorrect: false,
+                              controller: controllerNomTercero,
+                              focusNode: fucusTextFieldNomTercero,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecorations.authInputDecoration(
+                                  hint: "",
+                                  label: "Nombre de Tercero",
+                                  icon: Icons.password_outlined),
+                              onChanged: (value) {
+                                _.nomTercero = value;
+                              },
+                              validator: (value) {
+                                return (value != null)
+                                    ? null
+                                    : "El campo no puede estar vacío";
+                              }),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _.borrarNomTercero();
+                              FocusScope.of(context)
+                                  .requestFocus(fucusTextFieldCodTercero);
+                              controllerNomTercero.clear();
                             },
-                            validator: (value) {
-                              return (value != null)
-                                  ? null
-                                  : "El campo no puede estar vacío";
-                            }),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            _.borrarNomTercero();
-                            FocusScope.of(context)
-                                .requestFocus(fucusTextFieldCodTercero);
-                            controllerNomTercero.clear();
-                          },
-                          icon: const Icon(
-                            Icons.delete_forever,
-                            color: AppTheme.primary,
-                          ))
-                    ],
-                  ),
+                            icon: const Icon(
+                              Icons.delete_forever,
+                              color: AppTheme.primary,
+                            ))
+                      ],
+                    ),
                   const SizedBox(height: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

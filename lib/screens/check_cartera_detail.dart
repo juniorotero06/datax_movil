@@ -19,6 +19,8 @@ class CheckCarteraDetail extends StatelessWidget {
     final List<DetailsCartera> dataContent =
         balanceServices.onDisplayDetailsCartera;
 
+    double saldo = 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -29,6 +31,12 @@ class CheckCarteraDetail extends StatelessWidget {
         child: GetBuilder<ModalCarteraController>(
             init: ModalCarteraController(),
             builder: (_) {
+              if (_.vrSaldo != null) {
+                saldo = _.vrSaldo.toDouble();
+              } else {
+                saldo = 0;
+              }
+
               return Column(
                 children: [
                   const SizedBox(height: 130),
@@ -51,7 +59,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cXCEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo ?? 0).replaceAll('USD', '')}",
+                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(saldo).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -59,7 +67,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cxPEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(_.vrSaldo ?? 0).replaceAll('USD', '')}",
+                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(saldo).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
