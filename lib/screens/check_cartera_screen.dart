@@ -228,13 +228,13 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                     child: Text(index.documentos.toString(),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
-                                    child: Text(
-                                        NumberFormat.currency(
-                                                locale: 'en_us',
-                                                decimalDigits: 0)
-                                            .format(index.vrSaldo ?? 0)
-                                            .replaceAll('USD', ''),
-                                        textAlign: TextAlign.center))),
+                                  child: Text(
+                                      NumberFormat.currency(
+                                              locale: 'en_us', decimalDigits: 0)
+                                          .format(index.vrSaldo ?? 0)
+                                          .replaceAll('USD', ''),
+                                      textAlign: TextAlign.right),
+                                )),
                                 DataCell(Center(
                                   child: IconButton(
                                     icon: const Icon(Icons.search),

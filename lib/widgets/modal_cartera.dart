@@ -167,9 +167,8 @@ class _ModalCarteraState extends State<_ModalCartera> {
                             ))
                       ],
                     ),
-                  if (_.cxPEnabled || _.cXCEnabled && _.isCXPC == false)
-                    const SizedBox(height: 10),
-                  if (_.cxPEnabled || _.cXCEnabled && _.isCXPC == false)
+                  if (_.cxPEnabled || _.cXCEnabled) const SizedBox(height: 10),
+                  if (_.cxPEnabled || _.cXCEnabled)
                     Row(
                       children: [
                         Expanded(
