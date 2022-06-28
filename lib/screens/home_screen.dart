@@ -125,6 +125,8 @@ class HomeScreen extends StatelessWidget {
                       future: authServices.readToken("auth-token"),
                       builder: (BuildContext context,
                           AsyncSnapshot<String> snapshot) {
+                        final auxiliarServices =
+                            Provider.of<AuxiliarServices>(context);
                         return MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
@@ -150,6 +152,7 @@ class HomeScreen extends StatelessWidget {
                               ],
                             ),
                             onPressed: () async {
+                              await auxiliarServices.getCuentas(snapshot.data!);
                               displayModalCartera(
                                   context, "Consultar Cartera", snapshot.data!);
                             });

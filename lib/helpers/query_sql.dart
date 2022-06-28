@@ -88,64 +88,390 @@ String querySQL(String codProducto, String producto, String bodega,
 }
 
 //?Resumen Cuentas por pagar y cuentas por cobrar
-String queryCXX_CXP(bool checkCXC, bool checkCXP, bool isCXPC) {
+String queryCXX_CXP(bool checkCXC, bool checkCXP, bool isCXPC, String cuenta,
+    String codTercero, String nomTercero) {
+  List<String> desCuenta = cuenta.split("||");
+  //? CXC ///////////////////////////////////////////////////////////
   if (checkCXC && !checkCXP && !isCXPC) {
+    if (cuenta != "" && codTercero == "" && nomTercero == "") {
+      return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta_nom LIKE '%${desCuenta[1]}%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND cuenta_nom LIKE '%${desCuenta[1]}%'";
+    }
+    if (codTercero != "" && nomTercero == "") {
+      if (cuenta != "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%'";
+      }
+      return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%'";
+    }
+    if (nomTercero != "") {
+      if (cuenta != "" && codTercero == "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+      if (codTercero != "" && cuenta == "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+      if (codTercero != "" && cuenta != "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+      return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND tercero_nom LIKE '%$nomTercero%'";
+    }
     return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120";
   }
-  if (!checkCXC && checkCXP && !isCXPC) {
+  //? CXP ///////////////////////////////////////////////////////////
+  if (checkCXP && !checkCXC && !isCXPC) {
+    if (cuenta != "" && codTercero == "" && nomTercero == "") {
+      return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%'";
+    }
+    if (codTercero != "" && nomTercero == "") {
+      if (cuenta != "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE' %$codTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%'";
+      }
+      return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%'";
+    }
+    if (nomTercero != "") {
+      if (cuenta != "" && codTercero == "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+      if (codTercero != "" && cuenta == "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+      if (codTercero != "" && cuenta != "") {
+        return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+      return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND tercero_nom LIKE '%$nomTercero%'";
+    }
     return "SELECT 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 UNION SELECT '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 UNION SELECT '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 UNION SELECT '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 UNION SELECT '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 UNION SELECT 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120";
   }
-  if (checkCXC && checkCXP && isCXPC) {
+
+  //? CXP y CXC /////////////////////////////////////////////////////////////////////////
+  if (isCXPC) {
+    if (codTercero != "" && nomTercero == "") {
+      return "SELECT 'CXC' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXP' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXC' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXP' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXC' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXP' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXC' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXP' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXC' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXP' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXC' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%' UNION SELECT 'CXP' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%'";
+    }
+    if (nomTercero != "") {
+      if (codTercero != "") {
+        return "SELECT 'CXC' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND tercero LIKE '%$codTercero%' AND tercero_nom LIKE '%$nomTercero%'";
+      }
+
+      return "SELECT 'CXC' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXC' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 AND tercero_nom LIKE '%$nomTercero%' UNION SELECT 'CXP' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120 AND tercero_nom LIKE '%$nomTercero%'";
+    }
     return "SELECT 'CXC' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)<=0 UNION SELECT 'CXP' AS CLASE, 'CORRIENTE' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo  FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)<=0 UNION SELECT 'CXC' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 UNION SELECT 'CXP' AS CLASE, '1 A 30' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30 UNION SELECT 'CXC' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 UNION SELECT 'CXP' AS CLASE, '31 A 60' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60 UNION SELECT 'CXC' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 UNION SELECT 'CXP' AS CLASE, '61 A 90' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90 UNION SELECT 'CXC' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 UNION SELECT 'CXP' AS CLASE, '91 A 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120 UNION SELECT 'CXC' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxc WHERE DATEDIFF(NOW(),vence)>120 UNION SELECT 'CXP' AS CLASE, 'MAYOR 120' AS TIPO, COUNT(*) AS Documentos, SUM(saldo) AS vr_saldo FROM saldo_cxp WHERE DATEDIFF(NOW(),vence)>120";
   }
   return "";
 }
 
-String queryDetails_CXPC(String clase, String tipo, int page, int size) {
+//? Quey Detalles de cartera
+
+String queryDetails_CXPC(String clase, String tipo, int page, int size,
+    String cuenta, String codTercero, String nomTercero) {
+  List<String> desCuenta = cuenta.split("||");
   if (clase == "CXC") {
     String query =
-        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE FROM saldo_cxc WHERE";
+        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE, cuenta, cuenta_nom FROM saldo_cxc WHERE";
 
     if (tipo == "CORRIENTE") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)<=0";
     }
     if (tipo == "1 A 30") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30";
     }
     if (tipo == "31 A 60") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60";
     }
     if (tipo == "61 A 90") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90";
     }
     if (tipo == "91 A 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120";
     }
     if (tipo == "MAYOR 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>120";
     }
     return "$query ORDER BY DIAS_VENCE DESC LIMIT $size OFFSET ${page * size}";
   }
   if (clase == "CXP") {
     String query =
-        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE FROM saldo_cxp WHERE";
+        "SELECT tercero, tercero_nom, dcmnto, saldo, vence, DATEDIFF(NOW(),vence) AS DIAS_VENCE, cuenta, cuenta_nom FROM saldo_cxp WHERE";
 
     if (tipo == "CORRIENTE") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)<=0";
     }
     if (tipo == "1 A 30") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>0 AND DATEDIFF(NOW(),vence)<=30";
     }
     if (tipo == "31 A 60") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>30 AND DATEDIFF(NOW(),vence)<=60";
     }
     if (tipo == "61 A 90") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>60 AND DATEDIFF(NOW(),vence)<=90";
     }
     if (tipo == "91 A 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>90 AND DATEDIFF(NOW(),vence)<=120";
     }
     if (tipo == "MAYOR 120") {
+      if (cuenta != "" && codTercero == "" && nomTercero == "") {
+        query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+      }
+      if (codTercero != "" && nomTercero == "") {
+        if (cuenta != "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        query = "$query tercero LIKE '%$codTercero%' AND";
+      }
+      if (nomTercero != "") {
+        if (cuenta != "" && codTercero == "") {
+          query = "$query cuenta LIKE '%${desCuenta[0]}%' AND";
+        }
+        if (codTercero != "" && cuenta == "") {
+          query = "$query tercero LIKE '%$codTercero%' AND";
+        }
+        if (codTercero != "" && cuenta != "") {
+          query =
+              "$query cuenta LIKE '%${desCuenta[0]}%' AND tercero LIKE '%$codTercero%' AND";
+        }
+        query = "$query tercero_nom LIKE '%$nomTercero%' AND";
+      }
       query = "$query DATEDIFF(NOW(),vence)>120";
     }
     return "$query ORDER BY DIAS_VENCE DESC LIMIT $size OFFSET ${page * size}";

@@ -1,11 +1,28 @@
 import 'package:get/state_manager.dart';
+import 'package:flutter/material.dart';
 
 class ModalCarteraController extends GetxController {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  String _codTercero = "";
+  String _nomTercero = "";
   bool cXCEnabled = false;
   bool cxPEnabled = false;
   String tipo = "";
   String clase = "";
-  late bool isCXPC;
+  String cuenta = "";
+  dynamic vrSaldo;
+  bool isCXPC = false;
+
+  String get codTercero => _codTercero;
+  set codTercero(String value) {
+    _codTercero = value;
+  }
+
+  String get nomTercero => _nomTercero;
+  set nomTercero(String value) {
+    _nomTercero = value;
+  }
 
   void isCXPCChange() {
     if (cXCEnabled && cxPEnabled) {
@@ -27,9 +44,22 @@ class ModalCarteraController extends GetxController {
     update();
   }
 
+  void borrarCodTercero() {
+    _codTercero = "";
+    update();
+  }
+
+  void borrarNomTercero() {
+    _nomTercero = "";
+    update();
+  }
+
   void limpiar() {
     cXCEnabled = false;
     cxPEnabled = false;
+    cuenta = "";
+    _codTercero = "";
+    _nomTercero = "";
     update();
   }
 

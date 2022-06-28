@@ -1,5 +1,3 @@
-import 'package:datax_movil/models/models.dart';
-import 'package:datax_movil/widgets/modal_home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
@@ -61,12 +59,12 @@ class ModalHomeController extends GetxController {
   }
 
   void limpiar() {
-    this._bodega = "";
-    this._producto = "";
-    this._codProducto = "";
-    this._grupo = "";
-    this._linea = "";
-    this._saldo = "";
+    _bodega = "";
+    _producto = "";
+    _codProducto = "";
+    _grupo = "";
+    _linea = "";
+    _saldo = "";
 
     update();
   }

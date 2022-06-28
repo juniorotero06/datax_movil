@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:datax_movil/controllers/controllers.dart';
@@ -40,26 +41,32 @@ class CheckCarteraScreen extends StatelessWidget {
                 builder: (__) {
                   if (__.cXCEnabled && !__.isCXPC) {
                     for (int i = 0; i < listCarteraCXC.length; i++) {
-                      totalCarteraCXC = totalCarteraCXC +
-                          listCarteraCXC[i].vrSaldo!.toDouble();
+                      if (listCarteraCXC[i].vrSaldo != null) {
+                        totalCarteraCXC = totalCarteraCXC +
+                            listCarteraCXC[i].vrSaldo!.toDouble();
+                      }
                     }
                   }
                   if (__.cxPEnabled && !__.isCXPC) {
                     for (int i = 0; i < listCarteraCXP.length; i++) {
-                      totalcarteraCXP = totalcarteraCXP +
-                          listCarteraCXP[i].vrSaldo!.toDouble();
+                      if (listCarteraCXP[i].vrSaldo != null) {
+                        totalcarteraCXP = totalcarteraCXP +
+                            listCarteraCXP[i].vrSaldo.toDouble();
+                      }
                     }
                   }
 
                   if (__.isCXPC) {
                     for (int i = 0; i < listCarteraCXPC.length; i++) {
-                      if (listCarteraCXPC[i].clase == "CXC") {
-                        totalCarteraCXC =
-                            totalCarteraCXC + listCarteraCXPC[i].vrSaldo!;
+                      if (listCarteraCXPC[i].clase == "CXC" &&
+                          listCarteraCXPC[i].vrSaldo != null) {
+                        totalCarteraCXC = totalCarteraCXC +
+                            listCarteraCXPC[i].vrSaldo.toDouble();
                       }
-                      if (listCarteraCXPC[i].clase == "CXP") {
-                        totalcarteraCXP =
-                            totalcarteraCXP + listCarteraCXPC[i].vrSaldo!;
+                      if (listCarteraCXPC[i].clase == "CXP" &&
+                          listCarteraCXPC[i].vrSaldo != null) {
+                        totalcarteraCXP = totalcarteraCXP +
+                            listCarteraCXPC[i].vrSaldo.toDouble();
                       }
                     }
                   }
@@ -88,7 +95,8 @@ class CheckCarteraScreen extends StatelessWidget {
                       if (__.cXCEnabled && !__.isCXPC)
                         Center(
                             child: Text(
-                                "Total Saldo de Cartera CXC: ${totalCarteraCXC.toStringAsFixed(0)}",
+                                "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalCarteraCXC)}"
+                                    .replaceAll('USD', ''),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -98,7 +106,8 @@ class CheckCarteraScreen extends StatelessWidget {
                       if (__.cxPEnabled && !__.isCXPC)
                         Center(
                             child: Text(
-                                "Total Saldo de Cartera CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                                "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalcarteraCXP)}"
+                                    .replaceAll('USD', ''),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -108,7 +117,7 @@ class CheckCarteraScreen extends StatelessWidget {
                       if (_.isCXPC)
                         Center(
                             child: Text(
-                                "Total CXC: ${totalCarteraCXC.toStringAsFixed(0)} Vs. Total CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                                "Total CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalCarteraCXC).replaceAll('USD', '')} Vs. Total CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(totalcarteraCXP).replaceAll('USD', '')}",
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     fontSize: 25,
@@ -219,22 +228,34 @@ class _DataTableCarteraCXCP extends StatelessWidget {
                                     child: Text(index.documentos.toString(),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
-                                    child: Text(
-                                        index.vrSaldo!.toStringAsFixed(0),
-                                        textAlign: TextAlign.center))),
+                                  child: Text(
+                                      NumberFormat.currency(
+                                              locale: 'en_us', decimalDigits: 0)
+                                          .format(index.vrSaldo ?? 0)
+                                          .replaceAll('USD', ''),
+                                      textAlign: TextAlign.right),
+                                )),
                                 DataCell(Center(
                                   child: IconButton(
                                     icon: const Icon(Icons.search),
                                     onPressed: () async {
                                       _.clase = index.clase!;
                                       _.tipo = index.tipo!;
+                                      _.vrSaldo = index.vrSaldo;
                                       _.limpiar();
                                       String query = queryDetails_CXPC(
-                                          index.clase!, index.tipo!, 0, 10);
+                                          index.clase!,
+                                          index.tipo!,
+                                          0,
+                                          10,
+                                          _.cuenta,
+                                          _.codTercero,
+                                          _.nomTercero);
                                       print(query);
                                       await balanceServices.getDetail_CxPC(
                                           query, "0", "10", snapshot.data!);
-                                      await Get.to(const CheckCarteraDetail());
+                                      await Get.to(
+                                          () => const CheckCarteraDetail());
                                     },
                                   ),
                                 ))
@@ -304,7 +325,11 @@ class _DataTableCartera extends StatelessWidget {
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
                                     child: Text(
-                                        index.vrSaldo!.toStringAsFixed(0),
+                                        NumberFormat.currency(
+                                                locale: 'en_us',
+                                                decimalDigits: 0)
+                                            .format(index.vrSaldo ?? 0)
+                                            .replaceAll('USD', ''),
                                         textAlign: TextAlign.center))),
                                 DataCell(Center(
                                   child: IconButton(
@@ -312,23 +337,38 @@ class _DataTableCartera extends StatelessWidget {
                                     onPressed: () async {
                                       if (_.cXCEnabled) {
                                         _.tipo = index.tipo!;
+                                        _.vrSaldo = index.vrSaldo;
+                                        print("SALDO: ${index.vrSaldo}");
                                         String query = queryDetails_CXPC(
-                                            "CXC", index.tipo!, 0, 10);
+                                            "CXC",
+                                            index.tipo!,
+                                            0,
+                                            10,
+                                            _.cuenta,
+                                            _.codTercero,
+                                            _.nomTercero);
                                         print(query);
                                         await balanceServices.getDetail_CxPC(
                                             query, "0", "10", snapshot.data!);
                                         await Get.to(
-                                            const CheckCarteraDetail());
+                                            () => const CheckCarteraDetail());
                                       }
                                       if (_.cxPEnabled) {
                                         _.tipo = index.tipo!;
+                                        _.vrSaldo = index.vrSaldo;
                                         String query = queryDetails_CXPC(
-                                            "CXP", index.tipo!, 0, 10);
+                                            "CXP",
+                                            index.tipo!,
+                                            0,
+                                            10,
+                                            _.cuenta,
+                                            _.codTercero,
+                                            _.nomTercero);
                                         print(query);
                                         await balanceServices.getDetail_CxPC(
                                             query, "0", "10", snapshot.data!);
                                         await Get.to(
-                                            const CheckCarteraDetail());
+                                            () => const CheckCarteraDetail());
                                       }
                                     },
                                   ),

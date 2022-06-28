@@ -2,6 +2,7 @@ import 'package:datax_movil/helpers/query_sql.dart';
 import 'package:datax_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/controllers.dart';
@@ -17,10 +18,9 @@ class CheckCarteraDetail extends StatelessWidget {
     final balanceServices = Provider.of<BalanceServices>(context);
     final List<DetailsCartera> dataContent =
         balanceServices.onDisplayDetailsCartera;
-    List<Cartera> listCarteraCXC = balanceServices.onDisplayCartera;
-    double totalCarteraCXC = 0;
-    List<Cartera> listCarteraCXP = balanceServices.onDisplayCartera;
-    double totalcarteraCXP = 0;
+
+    double saldo = 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -31,29 +31,12 @@ class CheckCarteraDetail extends StatelessWidget {
         child: GetBuilder<ModalCarteraController>(
             init: ModalCarteraController(),
             builder: (_) {
-              if (_.cXCEnabled && !_.isCXPC) {
-                for (int i = 0; i < listCarteraCXC.length; i++) {
-                  totalCarteraCXC =
-                      totalCarteraCXC + listCarteraCXC[i].vrSaldo!.toDouble();
-                }
-              }
-              if (_.cxPEnabled && !_.isCXPC) {
-                for (int i = 0; i < listCarteraCXP.length; i++) {
-                  totalcarteraCXP =
-                      totalcarteraCXP + listCarteraCXP[i].vrSaldo!.toDouble();
-                }
+              if (_.vrSaldo != null) {
+                saldo = _.vrSaldo.toDouble();
+              } else {
+                saldo = 0;
               }
 
-              if (_.isCXPC) {
-                for (int i = 0; i < listCarteraCXC.length; i++) {
-                  totalCarteraCXC =
-                      totalCarteraCXC + listCarteraCXC[i].vrSaldo!.toDouble();
-                }
-                for (int i = 0; i < listCarteraCXP.length; i++) {
-                  totalcarteraCXP =
-                      totalcarteraCXP + listCarteraCXP[i].vrSaldo!.toDouble();
-                }
-              }
               return Column(
                 children: [
                   const SizedBox(height: 130),
@@ -76,7 +59,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cXCEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXC: ${totalCarteraCXC.toStringAsFixed(0)}",
+                            "Total Saldo de Cartera CXC: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(saldo).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -84,7 +67,7 @@ class CheckCarteraDetail extends StatelessWidget {
                   if (_.cxPEnabled && !_.isCXPC)
                     Center(
                         child: Text(
-                            "Total Saldo de Cartera CXP: ${totalcarteraCXP.toStringAsFixed(0)}",
+                            "Total Saldo de Cartera CXP: ${NumberFormat.currency(locale: 'en_us', decimalDigits: 0).format(saldo).replaceAll('USD', '')}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold))),
@@ -130,6 +113,8 @@ class _DetailsCarteraDataTable extends StatelessWidget {
                 DataColumn(label: Center(child: Text("Saldo"))),
                 DataColumn(label: Center(child: Text("Vence"))),
                 DataColumn(label: Center(child: Text("Dias de Vencimiento"))),
+                DataColumn(label: Center(child: Text("Cuenta"))),
+                DataColumn(label: Center(child: Text("Nombre de Cuenta"))),
               ],
               rows: dataContent
                   .map((index) => DataRow(cells: [
@@ -139,12 +124,20 @@ class _DetailsCarteraDataTable extends StatelessWidget {
                         DataCell(Center(
                             child: Text(index.dcmnto ?? "Sin datos básicos"))),
                         DataCell(Center(
-                            child: Text(index.saldo!.toStringAsFixed(0)))),
+                            child: Text(NumberFormat.currency(
+                                    locale: 'en_us', decimalDigits: 0)
+                                .format(index.saldo!)
+                                .replaceAll('USD', '')))),
                         DataCell(Center(
                             child:
                                 Text(index.vence.toString().substring(0, 10)))),
                         DataCell(
                             Center(child: Text(index.diasVence.toString()))),
+                        DataCell(Center(
+                            child: Text(index.cuenta ?? "Sin datos básicos"))),
+                        DataCell(Center(
+                            child:
+                                Text(index.cuentaNom ?? "Sin datos básicos")))
                       ]))
                   .toList(),
             ),
@@ -184,29 +177,25 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   onPressed: () async {
                     if (page >= 1) {
                       page--;
-                      print("Clase: ${_.clase}");
 
                       if (_.cXCEnabled) {
-                        print("Clase: ENTRE CXC");
-                        String query =
-                            queryDetails_CXPC("CXC", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXC", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
-                        print("Clase: ENTRE CXP");
-                        String query =
-                            queryDetails_CXPC("CXP", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXP", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
 
                       if (_.isCXPC) {
-                        print("Clase: ENTRE CXP y CXC");
-                        String query =
-                            queryDetails_CXPC(_.clase, _.tipo, page, size);
+                        String query = queryDetails_CXPC(_.clase, _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
@@ -225,28 +214,25 @@ class _ButtomsPaginateState extends State<_ButtomsPaginate> {
                   onPressed: () async {
                     if (page < balanceServices.totalPages) {
                       page++;
-                      print("Clase: ${_.clase}");
+
                       if (_.cXCEnabled) {
-                        print("Clase: ENTRE CXC");
-                        String query =
-                            queryDetails_CXPC("CXC", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXC", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
                       if (_.cxPEnabled) {
-                        print("Clase: ENTRE CXP");
-                        String query =
-                            queryDetails_CXPC("CXP", _.tipo, page, size);
+                        String query = queryDetails_CXPC("CXP", _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);
                       }
 
                       if (_.isCXPC) {
-                        print("Clase: ENTRE CXP y CXC");
-                        String query =
-                            queryDetails_CXPC(_.clase, _.tipo, page, size);
+                        String query = queryDetails_CXPC(_.clase, _.tipo, page,
+                            size, _.cuenta, _.codTercero, _.nomTercero);
 
                         await balanceServices.getDetail_CxPC(query,
                             page.toString(), size.toString(), snapshot.data!);

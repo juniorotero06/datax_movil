@@ -8,10 +8,13 @@ class AuxiliarServices extends ChangeNotifier {
   List<Bodegas> onDisplayBodegas = [];
   List<Lineas> onDisplayLineas = [];
   List<Grupos> onDisplayGrupo = [];
+  late CuentasxCobrar onDisplayCuentasxCobrar;
+  late CuentasxPagar onDisplayCuentasxPagar;
   AuxiliarServices() {
     getBodegas;
     getLineas;
     getGrupos;
+    getCuentas;
   }
 
   getBodegas(String token) async {
@@ -47,6 +50,19 @@ class AuxiliarServices extends ChangeNotifier {
 
     final getGruposResponse = GetGruposResponse.fromJson(resp.body);
     onDisplayGrupo = getGruposResponse.results;
+    notifyListeners();
+  }
+
+  getCuentas(String token) async {
+    final url = Uri.https(_baseUrl, "/api/aux/cuentas");
+
+    final resp = await http.get(url, headers: {
+      "auth-token": token,
+    });
+
+    final getCuentasResponse = GetCuentasResponse.fromJson(resp.body);
+    onDisplayCuentasxCobrar = getCuentasResponse.cuentasxCobrar;
+    onDisplayCuentasxPagar = getCuentasResponse.cuentasxPagar;
     notifyListeners();
   }
 }
